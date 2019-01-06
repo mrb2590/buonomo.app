@@ -1,18 +1,30 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-container class="home-view" fluid fill-height>
+    <v-layout>
+      <HelloWorld />
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import HelloWorld from '../components/HelloWorld';
+import appConfig from '../app.config';
 
 export default {
-  name: 'home',
+  name: 'Home',
+
+  metaInfo: {
+    title: `Home | ${appConfig.title}`,
+    meta: [
+      {
+        name: 'description',
+        content: 'Homepage.'
+      }
+    ]
+  },
+
   components: {
     HelloWorld
   }
-}
+};
 </script>
