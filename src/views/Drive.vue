@@ -1,7 +1,11 @@
 <template>
-  <div class="drive-view">
-    <h1>This is a drive page</h1>
-  </div>
+  <v-container class="drive-view" fluid fill-height>
+    <v-layout justify-center align-center>
+      <v-flex shrink>
+        Drive
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

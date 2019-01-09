@@ -187,7 +187,7 @@ export default {
           this.clear();
 
           // Redirect to the originally requested page, or to the home page
-          this.$router.push(this.$route.query.redirectFrom || { name: 'profile' });
+          this.$router.push(this.$route.query.redirectFrom || { name: 'dashboard' });
         })
         .catch(error => {
           this.sending = false;

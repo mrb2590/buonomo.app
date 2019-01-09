@@ -24,24 +24,24 @@
         </v-list-tile>
       </v-list>
 
-      <v-list dense class="pt-0">
+      <v-list dense :class="{ 'pt-0': signedIn }">
         <v-divider v-if="signedIn"></v-divider>
 
         <v-list-tile to="/">
+          <v-list-tile-action>
+            <v-icon>fas fa-home</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Home</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile to="/dashboard" v-if="signedIn">
           <v-list-tile-action>
             <v-icon>fas fa-tachometer-alt</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Dashboard</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile to="/about">
-          <v-list-tile-action>
-            <v-icon>fas fa-info-circle</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>About</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 

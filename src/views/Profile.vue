@@ -1,7 +1,11 @@
 <template>
-  <div class="profile-view">
-    <h1>This is a profile page</h1>
-  </div>
+  <v-container class="profile-view" fluid fill-height>
+    <v-layout justify-center align-center>
+      <v-flex shrink>
+        Profile
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

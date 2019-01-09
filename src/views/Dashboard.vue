@@ -1,8 +1,8 @@
 <template>
-  <v-container class="chat-view" fluid fill-height>
+  <v-container class="dashboard-view" fluid fill-height>
     <v-layout justify-center align-center>
       <v-flex shrink>
-        Chat
+        Dashboard
       </v-flex>
     </v-layout>
   </v-container>
@@ -12,14 +12,14 @@
 import appConfig from '../app.config';
 
 export default {
-  name: 'Chat',
+  name: 'Dashboard',
 
   metaInfo: {
-    title: `Chat | ${appConfig.title}`,
+    title: `Dashboard | ${appConfig.title}`,
     meta: [
       {
         name: 'description',
-        content: 'Chat with other users.'
+        content: 'Your dashboard.'
       }
     ]
   }

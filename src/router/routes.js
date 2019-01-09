@@ -14,11 +14,11 @@ export default [
     }
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => lazyLoadView(import(/* webpackChunkName: "about" */ '../views/About')),
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => lazyLoadView(import(/* webpackChunkName: "dashboard" */ '../views/Dashboard')),
     meta: {
-      displayName: 'About'
+      displayName: 'Dashboard'
     }
   },
   {

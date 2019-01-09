@@ -1,7 +1,11 @@
 <template>
-  <div class="games-view">
-    <h1>This is a games page</h1>
-  </div>
+  <v-container class="games-view" fluid fill-height>
+    <v-layout justify-center align-center>
+      <v-flex shrink>
+        Games
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
