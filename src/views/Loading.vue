@@ -9,11 +9,13 @@
 </template>
 
 <script>
+import appConfig from '../app.config';
+
 export default {
   name: 'Loading',
 
   metaInfo: {
-    title: 'Loading',
+    title: `Loading... | ${appConfig.title}`,
     meta: [
       {
         name: 'description',

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta';
-// import store from '../state/store';
+import store from '../state/store';
 import routes from './routes';
 
 Vue.use(VueRouter);
@@ -24,33 +24,26 @@ const router = new VueRouter({
   }
 });
 
-// // Before each route evaluates...
-// router.beforeEach((routeTo, routeFrom, next) => {
-//   // Check if auth is required on this route
-//   // (including nested routes).
-//   const authRequired = routeTo.matched.some(route => route.meta.authRequired);
+router.beforeEach((routeTo, routeFrom, next) => {
+  // Check if auth is required on this route
+  // (including nested routes).
+  const authRequired = routeTo.matched.some(route => route.meta.authRequired);
 
-//   store.dispatch('auth/validate').then(validUser => {
-//     // Then continue if the token still represents a valid user,
-//     // otherwise redirect to login.
-//     if (authRequired && !validUser) {
-//       redirectToLogin();
-//     }
-//     next();
-//   });
+  store.dispatch('auth/validateToken').then(validUser => {
+    // Then continue if the token still represents a valid user,
+    // otherwise redirect to signin.
+    if (authRequired && !validUser) {
+      next({ name: 'signin', query: { redirectFrom: routeTo.fullPath } });
+    } else {
+      next();
+    }
+  });
+});
 
-//   function redirectToLogin () {
-//     // Pass the original route to the login component
-//     next({ name: 'signin', query: { redirectFrom: routeTo.fullPath } });
-//   }
-// });
-
-// After navigation is confirmed, but before resolving...
 router.beforeResolve((routeTo, routeFrom, next) => {
   next();
 });
 
-// When each route is finished evaluating...
 router.afterEach((routeTo, routeFrom) => {
   //
 });

@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    <h1>This is an about page</h1>
+  <div class="profile-view">
+    <h1>This is a profile page</h1>
   </div>
 </template>
 
@@ -8,14 +8,14 @@
 import appConfig from '../app.config';
 
 export default {
-  name: 'About',
+  name: 'Profile',
 
   metaInfo: {
-    title: `About | ${appConfig.title}`,
+    title: `Profile | ${appConfig.title}`,
     meta: [
       {
         name: 'description',
-        content: 'About Buonomo.'
+        content: 'Your profile.'
       }
     ]
   }

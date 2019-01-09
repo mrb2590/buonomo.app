@@ -1,4 +1,4 @@
-// import store from '../state/store';
+import store from '../state/store';
 
 const loadingView = require('../views/Loading').default;
 const timeoutView = require('../views/Timeout').default;
@@ -10,27 +10,9 @@ export default [
     name: 'home',
     component: () => lazyLoadView(import(/* webpackChunkName: "home" */ '../views/Home')),
     meta: {
-      displayName: 'Home'
+      displayName: 'Buonomo'
     }
   },
-  // {
-  //   path: '/signin',
-  //   name: 'signin',
-  //   component: () => lazyLoadView(import(/* webpackChunkName: "auth" */ '../views/SignIn')),
-  //   meta: {
-  //     displayName: 'Sign In'
-  //   },
-  //   beforeEnter (routeTo, routeFrom, next) {
-  //     // If the user is already logged in
-  //     if (store.getters['auth/signedIn']) {
-  //       // Redirect to the profile page instead
-  //       next({ name: 'profile' });
-  //     } else {
-  //       // Continue to the login page
-  //       next();
-  //     }
-  //   }
-  // },
   {
     path: '/about',
     name: 'about',
@@ -39,46 +21,94 @@ export default [
       displayName: 'About'
     }
   },
-  // {
-  //   path: '/profile',
-  //   name: 'profile',
-  //   component: () => lazyLoadView(import(/* webpackChunkName: "profile" */ '../views/Profile')),
-  //   meta: {
-  //     displayName: 'Profile',
-  //     authRequired: true
-  //   }
-  // },
-  // {
-  //   path: '/drive',
-  //   name: 'drive',
-  //   component: () => lazyLoadView(import(/* webpackChunkName: "drive" */ '../views/Drive')),
-  //   meta: {
-  //     displayName: 'Drive',
-  //     authRequired: true
-  //   }
-  // },
-  // {
-  //   path: '/surveillance',
-  //   name: 'surveillance',
-  //   component: () => lazyLoadView(import(/* webpackChunkName: "surveillance" */ '../views/Surveillance')),
-  //   meta: {
-  //     displayName: 'Surveillance',
-  //     authRequired: true
-  //   }
-  // },
-  // {
-  //   path: '/signout',
-  //   name: 'signout',
-  //   meta: {
-  //     authRequired: true
-  //   },
-  //   beforeEnter (routeTo, routeFrom, next) {
-  //     const authRequiredOnPreviousRoute = routeFrom.matched.some(route => route.meta.authRequired);
-  //     // Navigate back to previous page, or home as a fallback
-  //     store.dispatch('auth/signOut');
-  //     next(authRequiredOnPreviousRoute ? { name: 'signin' } : { ...routeFrom });
-  //   }
-  // },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => lazyLoadView(import(/* webpackChunkName: "profile" */ '../views/Profile')),
+    meta: {
+      displayName: 'Profile',
+      authRequired: true
+    }
+  },
+  {
+    path: '/drive',
+    name: 'drive',
+    component: () => lazyLoadView(import(/* webpackChunkName: "drive" */ '../views/Drive')),
+    meta: {
+      displayName: 'Drive',
+      authRequired: true
+    }
+  },
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => lazyLoadView(import(/* webpackChunkName: "chat" */ '../views/Chat')),
+    meta: {
+      displayName: 'Chat',
+      authRequired: true
+    }
+  },
+  {
+    path: '/games',
+    name: 'game',
+    component: () => lazyLoadView(import(/* webpackChunkName: "games" */ '../views/Games')),
+    meta: {
+      displayName: 'Games'
+    }
+  },
+  {
+    path: '/surveillance',
+    name: 'surveillance',
+    component: () => lazyLoadView(import(
+      /* webpackChunkName: "surveillance" */ '../views/Surveillance'
+    )),
+    meta: {
+      displayName: 'Surveillance',
+      authRequired: true
+    }
+  },
+  {
+    path: '/preferences',
+    name: 'preferences',
+    component: () => lazyLoadView(import(
+      /* webpackChunkName: "preferences" */ '../views/Preferences'
+    )),
+    meta: {
+      displayName: 'Preferences'
+    }
+  },
+  {
+    path: '/signin',
+    name: 'signin',
+    component: () => lazyLoadView(import(/* webpackChunkName: "auth" */ '../views/SignIn')),
+    meta: {
+      displayName: 'Sign In'
+    },
+    beforeEnter (routeTo, routeFrom, next) {
+      // If the user is already logged in redirect to the profile page instead
+      // otherwise continue to sign in page
+      if (store.getters['auth/signedIn']) {
+        next({ name: 'profile' });
+      } else {
+        next();
+      }
+    }
+  },
+  {
+    path: '/signout',
+    name: 'signout',
+    meta: {
+      authRequired: true
+    },
+    beforeEnter (routeTo, routeFrom, next) {
+      const authRequiredOnPreviousRoute = routeFrom.matched.some(route => route.meta.authRequired);
+
+      store.dispatch('auth/signOut');
+
+      // Navigate back to previous page, or home as a fallback
+      next(authRequiredOnPreviousRoute ? { name: 'signin' } : { ...routeFrom });
+    }
+  },
   {
     path: '/404',
     name: '404',

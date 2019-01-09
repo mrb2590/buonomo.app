@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    <h1>This is an about page</h1>
+  <div class="games-view">
+    <h1>This is a games page</h1>
   </div>
 </template>
 
@@ -8,14 +8,14 @@
 import appConfig from '../app.config';
 
 export default {
-  name: 'About',
+  name: 'Games',
 
   metaInfo: {
-    title: `About | ${appConfig.title}`,
+    title: `Games | ${appConfig.title}`,
     meta: [
       {
         name: 'description',
-        content: 'About Buonomo.'
+        content: 'Play Javascript games.'
       }
     ]
   }

@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    <h1>This is an about page</h1>
+  <div class="drive-view">
+    <h1>This is a drive page</h1>
   </div>
 </template>
 
@@ -8,14 +8,14 @@
 import appConfig from '../app.config';
 
 export default {
-  name: 'About',
+  name: 'Drive',
 
   metaInfo: {
-    title: `About | ${appConfig.title}`,
+    title: `Drive | ${appConfig.title}`,
     meta: [
       {
         name: 'description',
-        content: 'About Buonomo.'
+        content: 'Access you drive files and folders.'
       }
     ]
   }

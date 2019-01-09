@@ -9,11 +9,13 @@
 </template>
 
 <script>
+import appConfig from '../app.config';
+
 export default {
-  name: '404',
+  name: 'NotFound',
 
   metaInfo: {
-    title: '404',
+    title: `Page Not Found | ${appConfig.title}`,
     meta: [
       {
         name: 'description',

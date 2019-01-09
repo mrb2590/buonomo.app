@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    <h1>This is an about page</h1>
+  <div class="surveillance-view">
+    <h1>This is a surveillance page</h1>
   </div>
 </template>
 
@@ -8,14 +8,14 @@
 import appConfig from '../app.config';
 
 export default {
-  name: 'About',
+  name: 'Surveillance',
 
   metaInfo: {
-    title: `About | ${appConfig.title}`,
+    title: `Surveillance | ${appConfig.title}`,
     meta: [
       {
         name: 'description',
-        content: 'About Buonomo.'
+        content: 'View surveillance feeds.'
       }
     ]
   }

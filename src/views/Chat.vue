@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    <h1>This is an about page</h1>
+  <div class="cahe-view">
+    <h1>This is a chat page</h1>
   </div>
 </template>
 
@@ -8,14 +8,14 @@
 import appConfig from '../app.config';
 
 export default {
-  name: 'About',
+  name: 'Chat',
 
   metaInfo: {
-    title: `About | ${appConfig.title}`,
+    title: `Chat | ${appConfig.title}`,
     meta: [
       {
         name: 'description',
-        content: 'About Buonomo.'
+        content: 'Chat with other users.'
       }
     ]
   }
