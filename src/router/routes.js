@@ -88,7 +88,7 @@ export default [
       // If the user is already logged in redirect to the profile page instead
       // otherwise continue to sign in page
       if (store.getters['auth/signedIn']) {
-        next({ name: 'profile' });
+        next({ name: 'dashboard' });
       } else {
         next();
       }
