@@ -1,30 +1,28 @@
 <template>
-  <div class="preferences-view">
-    <v-container grid-list-xl fill-height fluid>
-      <v-layout wrap>
-        <v-flex>
-          <CustomCard
-            color="primary"
-            title="Edit Preferences"
-            text="Choose site-wide preferences"
-          >
-            <v-layout wrap>
-              <v-flex xs12 sm6>
-                <v-switch
-                  v-model="prefDarkMode"
-                  label="Dark Mode"
-                  color="primary"
-                ></v-switch>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <p class="option-description">Set the theme to dark or light mode.</p>
-              </v-flex>
-            </v-layout>
-          </CustomCard>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </div>
+  <v-container class="preferences-view" grid-list-xl fill-height>
+    <v-layout wraps>
+      <v-flex>
+        <CustomCard
+          color="primary"
+          title="Edit Preferences"
+          text="Choose site-wide preferences"
+        >
+          <v-layout wrap>
+            <v-flex xs12 sm6>
+              <v-switch
+                v-model="prefDarkMode"
+                label="Dark Mode"
+                color="primary"
+              ></v-switch>
+            </v-flex>
+            <v-flex xs12 sm6>
+              <p class="option-description">Set the theme to dark or light mode.</p>
+            </v-flex>
+          </v-layout>
+        </CustomCard>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

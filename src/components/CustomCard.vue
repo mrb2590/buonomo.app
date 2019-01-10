@@ -5,12 +5,15 @@
     v-on="$listeners"
     class="main-card"
   >
-    <div class="offset">
+    <div
+      class="offset"
+      :class="{ 'text-xs-center': offsetType === 'avatar' }"
+    >
       <v-card
         :color="color"
-        :class="`elevation-${elevation}`"
-        class="heading-card"
+        class="heading-card elevation-10"
         dark
+        v-if="offsetType === 'card'"
       >
         <slot
           v-if="!title && !text"
@@ -27,6 +30,12 @@
           />
         </span>
       </v-card>
+      <v-avatar
+        :size="160"
+        v-if="offsetType === 'avatar'"
+      >
+        <img src="https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheType=GraphicShirt&clotheColor=Black&eyeType=WinkWacky&eyebrowType=RaisedExcitedNatural&facialHairColor=Brown&facialHairType=BeardLight&graphicType=Pizza&mouthType=Smile&skinColor=Light&topType=Hat" alt="avatar">
+      </v-avatar>
       <slot
         name="offset"
       />
@@ -54,14 +63,14 @@ export default {
   inheritAttrs: false,
 
   props: {
+    offsetType: {
+      type: String,
+      default: 'card'
+    },
+
     color: {
       type: String,
       default: 'secondary'
-    },
-
-    elevation: {
-      type: [Number, String],
-      default: 10
     },
 
     inline: {
