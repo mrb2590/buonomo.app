@@ -6,6 +6,23 @@
       fixed
       app
     >
+      <v-list class="pb-0">
+        <v-list-tile>
+          <v-list-tile-avatar>
+            <v-icon color="primary">fas fa-bold</v-icon>
+          </v-list-tile-avatar>
+
+          <v-list-tile-content>
+            <v-list-tile-title
+              class="font-weight-bold title primary--text"
+            >
+              Buonomo
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-divider></v-divider>
+      </v-list>
+
       <v-list v-if="signedIn" class="pb-0">
         <v-list-tile avatar to="/profile">
           <v-list-tile-avatar>
