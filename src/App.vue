@@ -121,6 +121,14 @@
       <router-view/>
     </v-content>
 
+    <v-progress-linear
+      id="progress"
+      v-show="showProgress"
+      color="primary"
+      :indeterminate="true"
+    >
+    </v-progress-linear>
+
     <v-footer app fixed class="footer-text">
       <span>&copy; 2017</span>
     </v-footer>
@@ -132,6 +140,7 @@
       :multi-line="snackbar.multiline"
       :timeout="snackbar.timeout"
       :vertical="snackbar.vertical"
+      :class="snackbar.class"
     >
       {{ snackbar.text }}
       <v-btn
@@ -157,7 +166,7 @@ export default {
   }),
 
   computed: {
-    ...mapState('app', ['snackbar']),
+    ...mapState('app', ['snackbar', 'showProgress']),
     ...mapState('preferences', ['darkMode']),
     ...mapGetters('auth', ['signedIn', 'fullName', 'initials'])
   },
@@ -174,5 +183,11 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+#progress {
+  z-index: 5;
+  position: fixed;
+  bottom: 15px;
 }
 </style>

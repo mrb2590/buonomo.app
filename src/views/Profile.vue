@@ -10,8 +10,8 @@
           class="text-xs-center"
         >
           <h1 class="display-1">{{ fullName() }}</h1>
-          <p>{{ user.email }}</p>
-          <p>@{{ user.slug }}</p>
+          <p v-if="user">{{ user.email }}</p>
+          <p v-if="user">@{{ user.slug }}</p>
         </CustomCard>
       </v-flex>
       <v-flex xs12 sm6>
@@ -22,7 +22,7 @@
               title="Edit Avatar"
               text="Make yourself look fine"
             >
-              <v-form>
+              <!-- <v-form>
                 <v-layout wrap>
                   <v-flex xs12>
                     <v-text-field
@@ -44,7 +44,7 @@
                     </v-btn>
                   </v-flex>
                 </v-layout>
-              </v-form>
+              </v-form> -->
             </CustomCard>
           </v-flex>
         </v-layout>
@@ -57,29 +57,7 @@
               title="Edit Profile"
               text="Give me your information so I can sell it"
             >
-              <v-form>
-                <v-layout wrap>
-                  <v-flex xs12>
-                    <v-text-field
-                      v-model="forms.profile.firstName"
-                      name="first_name"
-                      label="First Name"
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="forms.profile.lastName"
-                      name="last_name"
-                      label="Last Name"
-                      required
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 text-xs-right>
-                    <v-btn color="primary">
-                      Update Profile
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
-              </v-form>
+              <FormUpdateProfile/>
             </CustomCard>
           </v-flex>
           <v-flex xs12>
@@ -88,24 +66,7 @@
               title="Update Email"
               text="Update your email address so I can bug the shit out of you"
             >
-              <v-form>
-                <v-layout wrap>
-                  <v-flex xs12>
-                    <v-text-field
-                      v-model="forms.profile.email"
-                      name="email"
-                      label="Email"
-                      required
-                      type="email"
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 text-xs-right>
-                    <v-btn color="primary">
-                      Update Email
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
-              </v-form>
+              <FormUpdateEmail/>
             </CustomCard>
           </v-flex>
           <v-flex xs12>
@@ -114,38 +75,7 @@
               title="Update Password"
               text="Update your password"
             >
-              <v-form>
-                <v-layout wrap>
-                  <v-flex xs12>
-                    <v-text-field
-                      v-model="forms.profile.currentPassword"
-                      name="current_password"
-                      label="Current Password"
-                      required
-                      type="passsword"
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="forms.profile.newPassword"
-                      name="new_password"
-                      label="New Password"
-                      required
-                      type="passsword"
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="forms.profile.confirmNewPassword"
-                      name="confirm_new_pasword"
-                      label="Confirm New Password"
-                      required
-                      type="passsword"
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 text-xs-right>
-                    <v-btn color="primary">
-                      Update Password
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
-              </v-form>
+              <FormUpdatePassword/>
             </CustomCard>
           </v-flex>
         </v-layout>
@@ -158,6 +88,9 @@
 import appConfig from '../app.config';
 import CustomCard from '@/components/CustomCard';
 import { mapState, mapGetters } from 'vuex';
+import FormUpdateProfile from '@/components/FormUpdateProfile';
+import FormUpdateEmail from '@/components/FormUpdateEmail';
+import FormUpdatePassword from '@/components/FormUpdatePassword';
 
 export default {
   name: 'Profile',
@@ -173,28 +106,11 @@ export default {
   },
 
   components: {
-    CustomCard
+    CustomCard,
+    FormUpdateProfile,
+    FormUpdateEmail,
+    FormUpdatePassword
   },
-
-  data: () => ({
-    forms: {
-      profile: {
-        firstName: '',
-        lastName: ''
-      },
-      email: {
-        email: ''
-      },
-      password: {
-        currentPassword: '',
-        newPasssword: '',
-        confirmNewPassword: ''
-      },
-      avatar: {
-        src: ''
-      }
-    }
-  }),
 
   computed: {
     ...mapState('auth', ['user'])

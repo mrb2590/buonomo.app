@@ -12,33 +12,34 @@
               <v-text-field
                 v-model="form.email"
                 :error-messages="emailErrors"
-                :disabled="sending"
+                :disabled="showProgress"
                 name="email"
                 label="Email"
                 required
                 @input="$v.form.email.$touch()"
                 @blur="$v.form.email.$touch()"
-                @keyup="checkFormClear"
+                @keyup="checkFormIsEmpty"
+                autocomplete="off"
               ></v-text-field>
               <v-text-field
                 v-model="form.password"
                 :error-messages="passwordErrors"
                 :append-icon="showPassword ? 'fas fa-eye fa-lg' : 'fas fa-eye-slash fa-lg'"
                 :type="showPassword ? 'text' : 'password'"
-                :disabled="sending"
+                :disabled="showProgress"
                 namme="password"
                 label="Password"
                 required
                 @click:append="showPassword = !showPassword"
                 @input="$v.form.password.$touch()"
                 @blur="$v.form.password.$touch()"
-                @keyup="checkFormClear"
+                @keyup="checkFormIsEmpty"
               ></v-text-field>
               <v-switch
                 v-model="rememberMe"
                 label="Remember me"
                 color="primary"
-                :disabled="sending"
+                :disabled="showProgress"
               ></v-switch>
             </v-card-text>
 
@@ -46,23 +47,17 @@
               <v-spacer></v-spacer>
               <transition name="fade">
                 <v-btn
-                  v-show="!form.isClear"
+                  v-show="!form.isEmpty"
                   flat
-                  :disabled="sending"
-                  @click="clear"
+                  :disabled="showProgress"
+                  @click="clearForm"
                 >
                   clear
                 </v-btn>
               </transition>
-              <v-btn color="primary" :disabled="sending" type="submit">Sign In</v-btn>
+              <v-btn color="primary" :disabled="showProgress" type="submit">Sign In</v-btn>
             </v-card-actions>
           </v-form>
-          <v-progress-linear
-            v-if="sending"
-            color="primary"
-            :indeterminate="true"
-          >
-          </v-progress-linear>
         </v-card>
       </v-flex>
     </v-layout>
@@ -93,9 +88,8 @@ export default {
     form: {
       email: '',
       password: '',
-      isClear: true
-    },
-    sending: false
+      isEmpty: true
+    }
   }),
 
   mixins: [validationMixin],
@@ -114,6 +108,7 @@ export default {
 
   computed: {
     ...mapState('auth', ['remember']),
+    ...mapState('app', ['showProgress']),
 
     rememberMe: {
       get () {
@@ -124,34 +119,18 @@ export default {
       }
     },
 
-    /**
-     * Check for email erross and display them.
-     */
     emailErrors () {
       const errors = [];
-
-      if (!this.$v.form.email.$dirty) {
-        return errors;
-      }
-
+      if (!this.$v.form.email.$dirty) return errors;
       !this.$v.form.email.email && errors.push('Must be a valid email');
       !this.$v.form.email.required && errors.push('Email is required');
-
       return errors;
     },
 
-    /**
-     * Check for password erross and display them.
-     */
     passwordErrors () {
       const errors = [];
-
-      if (!this.$v.form.password.$dirty) {
-        return errors;
-      }
-
+      if (!this.$v.form.password.$dirty) return errors;
       !this.$v.form.password.required && errors.push('Password is required');
-
       return errors;
     }
   },
@@ -159,74 +138,56 @@ export default {
   methods: {
     ...mapActions('auth', ['signIn']),
     ...mapMutations('auth', ['SET_REMEMBER']),
+    ...mapMutations('app', ['SET_SHOW_PROGRESS']),
 
-    /**
-     * Validate the form.
-     */
     validate () {
       this.$v.$touch();
-
-      if (!this.$v.$invalid) {
-        this.submit();
-      }
+      if (!this.$v.$invalid) this.submit();
     },
 
-    /**
-     * Submit the form.
-     */
     submit () {
-      this.sending = true;
-
+      this.SET_SHOW_PROGRESS(true);
       return this.signIn({
         email: this.form.email,
         password: this.form.password,
         remember: this.remember
       })
         .then(token => {
-          this.sending = false;
-          this.clear();
-
+          this.SET_SHOW_PROGRESS(false);
+          this.clearForm();
           // Redirect to the originally requested page, or to the home page
           this.$router.push(this.$route.query.redirectFrom || { name: 'dashboard' });
         })
         .catch(error => {
-          this.sending = false;
-
+          this.SET_SHOW_PROGRESS(false);
           if (error.response.status === 401) {
             this.$store.commit('app/SET_SNACKBAR', {
-              color: 'error',
               show: true,
-              text: 'Access denied.'
+              text: 'Access denied.',
+              class: 'error-text'
             });
           } else {
             this.$store.commit('app/SET_SNACKBAR', {
               show: true,
-              color: 'error',
-              closeColor: 'white',
-              text: 'Something went wrong.'
+              text: 'Something went wrong.',
+              class: 'error--text'
             });
           }
         });
     },
 
-    /**
-     * Clear the form.
-     */
-    clear () {
+    clearForm () {
       this.$v.$reset();
       this.form.email = '';
       this.form.password = '';
-      this.form.isClear = true;
+      this.form.isEmpty = true;
     },
 
-    /**
-     * Check if the form is empty or not.
-     */
-    checkFormClear () {
+    checkFormIsEmpty () {
       if (this.form.email === '' && this.form.password === '') {
-        this.form.isClear = true;
+        this.form.isEmpty = true;
       } else {
-        this.form.isClear = false;
+        this.form.isEmpty = false;
       }
     }
   }
