@@ -36,6 +36,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
+import { processInvalidForm } from '@/state/functions';
 
 export default {
   name: 'FormUpdateEmail',
@@ -88,11 +89,10 @@ export default {
           });
         })
         .catch(error => {
-          console.log(error);
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: 'Failed to update your email.',
+            text: processInvalidForm(error, 'Failed to update your email address.'),
             class: 'error--text'
           });
         });

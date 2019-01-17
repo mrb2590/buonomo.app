@@ -62,12 +62,13 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, sameAs, minLength } from 'vuelidate/lib/validators';
+import { processInvalidForm } from '@/state/functions';
 
 export default {
   name: 'FormUpdatePassword',
 
   data: () => ({
-    formIsEmpty: false,
+    formIsEmpty: true,
     currentPassword: '',
     password: '',
     passwordConfirmation: ''
@@ -104,7 +105,8 @@ export default {
       const errors = [];
       if (!this.$v.passwordConfirmation.$dirty) return errors;
       !this.$v.passwordConfirmation.required && errors.push('New password is required');
-      !this.$v.passwordConfirmation.minLength && errors.push('New password must be at least six characters');
+      !this.$v.passwordConfirmation.minLength &&
+        errors.push('New password must be at least six characters');
       !this.$v.passwordConfirmation.sameAs && errors.push('New passwords do not match');
       return errors;
     }
@@ -128,6 +130,7 @@ export default {
         passwordConfirmation: this.passwordConfirmation
       })
         .then((user) => {
+          this.clearForm();
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
@@ -136,11 +139,11 @@ export default {
           });
         })
         .catch(error => {
-          console.log(error);
+          this.clearForm();
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: 'Failed to update your password.',
+            text: processInvalidForm(error, 'Failed to update your password.'),
             class: 'error--text'
           });
         });
