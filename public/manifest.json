@@ -1,6 +1,6 @@
 {
-  "name": "dev2.buonomo.app",
-  "short_name": "dev2.buonomo.app",
+  "name": "buonomo.app",
+  "short_name": "buonomo.app",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

@@ -1,4 +1,4 @@
-# dev2.buonomo.app
+# buonomo.app
 
 ## Project setup
 ```
