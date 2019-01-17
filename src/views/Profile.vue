@@ -1,7 +1,7 @@
 <template>
   <v-container class="profile-view" grid-list-xl fill-height>
     <v-layout wrap>
-      <v-flex xs12 sm6 offset-sm3>
+      <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3>
         <CustomCard
           color="primary"
           title="Edit Profile"

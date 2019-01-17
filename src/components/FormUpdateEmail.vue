@@ -36,7 +36,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { processInvalidForm } from '@/state/functions';
+import { processInvalidForm } from '@/functions';
 
 export default {
   name: 'FormUpdateEmail',

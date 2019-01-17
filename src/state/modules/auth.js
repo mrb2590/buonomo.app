@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Vue from 'vue';
-import { getSavedState, saveState } from '../functions';
+import { getSavedState, saveState } from '@/functions';
 
 const apiUrl = process.env.VUE_APP_API_URL;
 

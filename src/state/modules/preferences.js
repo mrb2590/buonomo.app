@@ -1,4 +1,4 @@
-import { getSavedState, saveState } from '../functions';
+import { getSavedState, saveState } from '@/functions';
 
 /**
  * State

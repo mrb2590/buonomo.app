@@ -68,6 +68,17 @@ export default [
     }
   },
   {
+    path: '/users',
+    name: 'users',
+    component: () => lazyLoadView(import(
+      /* webpackChunkName: "users" */ '../views/Users'
+    )),
+    meta: {
+      displayName: 'Users',
+      authRequired: true
+    }
+  },
+  {
     path: '/preferences',
     name: 'preferences',
     component: () => lazyLoadView(import(
