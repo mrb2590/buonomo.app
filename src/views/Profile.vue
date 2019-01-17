@@ -2,22 +2,12 @@
   <v-container class="profile-view" grid-list-xl fill-height>
     <v-layout wrap>
       <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3>
-        <CustomCard
-          color="primary"
-          title="Edit Profile"
-          text="Give me your information so I can sell it"
-          offsetType="avatar"
-          class="text-xs-center"
-        >
-          <h1 class="display-1">{{ fullName() }}</h1>
-          <p v-if="user">{{ user.email }}</p>
-          <p v-if="user">@{{ user.slug }}</p>
-        </CustomCard>
+        <UserProfileOverview :user="user"/>
       </v-flex>
       <v-flex xs12 sm6>
         <v-layout wrap>
           <v-flex xs12>
-            <CustomCard
+            <BaseCustomCard
               color="primary"
               title="Edit Avatar"
               text="Make yourself look fine"
@@ -45,38 +35,38 @@
                   </v-flex>
                 </v-layout>
               </v-form> -->
-            </CustomCard>
+            </BaseCustomCard>
           </v-flex>
         </v-layout>
       </v-flex>
       <v-flex xs12 sm6>
         <v-layout wrap>
           <v-flex xs12>
-            <CustomCard
+            <BaseCustomCard
               color="primary"
               title="Edit Profile"
               text="Give me your information so I can sell it"
             >
               <FormUpdateProfile/>
-            </CustomCard>
+            </BaseCustomCard>
           </v-flex>
           <v-flex xs12>
-            <CustomCard
+            <BaseCustomCard
               color="primary"
               title="Update Email"
               text="Update your email address so I can bug the shit out of you"
             >
               <FormUpdateEmail/>
-            </CustomCard>
+            </BaseCustomCard>
           </v-flex>
           <v-flex xs12>
-            <CustomCard
+            <BaseCustomCard
               color="primary"
               title="Update Password"
               text="Update your password"
             >
               <FormUpdatePassword/>
-            </CustomCard>
+            </BaseCustomCard>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -86,8 +76,9 @@
 
 <script>
 import appConfig from '../app.config';
-import CustomCard from '@/components/CustomCard';
-import { mapState, mapGetters } from 'vuex';
+import { mapState } from 'vuex';
+import BaseCustomCard from '@/components/BaseCustomCard';
+import UserProfileOverview from '@/components/UserProfileOverview';
 import FormUpdateProfile from '@/components/FormUpdateProfile';
 import FormUpdateEmail from '@/components/FormUpdateEmail';
 import FormUpdatePassword from '@/components/FormUpdatePassword';
@@ -106,7 +97,8 @@ export default {
   },
 
   components: {
-    CustomCard,
+    BaseCustomCard,
+    UserProfileOverview,
     FormUpdateProfile,
     FormUpdateEmail,
     FormUpdatePassword
@@ -114,10 +106,6 @@ export default {
 
   computed: {
     ...mapState('auth', ['user'])
-  },
-
-  methods: {
-    ...mapGetters('auth', ['fullName'])
   }
 };
 </script>

@@ -129,15 +129,6 @@
               <v-icon>fas fa-fw fa-user-plus</v-icon>
             </v-list-tile-action>
           </v-list-tile>
-
-          <v-list-tile to="/users/edit">
-            <v-list-tile-content>
-              <v-list-tile-title>Edit</v-list-tile-title>
-            </v-list-tile-content>
-            <v-list-tile-action>
-              <v-icon>fas fa-fw fa-user-edit</v-icon>
-            </v-list-tile-action>
-          </v-list-tile>
         </v-list-group>
 
         <v-list-tile to="/preferences">

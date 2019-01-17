@@ -2,7 +2,7 @@
   <v-container class="preferences-view" grid-list-xl fill-height>
     <v-layout wraps>
       <v-flex>
-        <CustomCard
+        <BaseCustomCard
           color="primary"
           title="Edit Preferences"
           text="Choose site-wide preferences"
@@ -19,7 +19,7 @@
               <p class="option-description">Set the theme to dark or light mode.</p>
             </v-flex>
           </v-layout>
-        </CustomCard>
+        </BaseCustomCard>
       </v-flex>
     </v-layout>
   </v-container>
@@ -27,7 +27,7 @@
 
 <script>
 import appConfig from '@/app.config';
-import CustomCard from '@/components/CustomCard';
+import BaseCustomCard from '@/components/BaseCustomCard';
 import { mapState, mapMutations } from 'vuex';
 
 export default {
@@ -44,7 +44,7 @@ export default {
   },
 
   components: {
-    CustomCard
+    BaseCustomCard
   },
 
   computed: {

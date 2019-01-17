@@ -76,7 +76,13 @@ export default [
     meta: {
       displayName: 'Users',
       authRequired: true
-    }
+    },
+    children: [
+      {
+        path: ':id',
+        component: () => lazyLoadView(import(/* webpackChunkName: "profile" */ '../views/UsersEdit'))
+      }
+    ]
   },
   {
     path: '/preferences',

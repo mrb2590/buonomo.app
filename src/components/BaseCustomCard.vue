@@ -58,7 +58,7 @@
 
 <script>
 export default {
-  name: 'CustomCard',
+  name: 'BaseCustomCard',
 
   inheritAttrs: false,
 

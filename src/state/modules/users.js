@@ -1,5 +1,8 @@
+import axios from 'axios';
+const apiUrl = process.env.VUE_APP_API_URL;
+
 export const state = {
-  users: []
+  currentUser: null
 };
 
 export const getters = {
@@ -7,12 +10,8 @@ export const getters = {
 };
 
 export const mutations = {
-  SET_USERS (state, users) {
-    state.users = [...users];
-  },
-
-  APPEND_USERS (state, users) {
-    state.users.push(users);
+  SET_CURRENT_USER (state, currentUser) {
+    state.currentUser = currentUser;
   }
 };
 
@@ -22,5 +21,25 @@ export const actions = {
    */
   init ({ commit }) {
     //
+  },
+
+  /**
+   * Fetch a user object from cache or the API.
+   */
+  async fetchUserById ({ commit, state }, userId) {
+    return axios.get(`${apiUrl}/v1/users/${userId}`)
+      .then(response => {
+        commit('SET_CURRENT_USER', response.data.data);
+        return response.data.data;
+      })
+      .catch(error => {
+        console.log(error);
+        commit('SET_CURRENT_USER', null);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: 'Failed to load the user\'s profile.',
+          class: 'error--text'
+        });
+      });
   }
 };

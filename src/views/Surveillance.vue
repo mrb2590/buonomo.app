@@ -2,7 +2,7 @@
   <v-container class="surveillance-view" grid-list-xl fill-height fluid>
     <v-layout wrap>
       <v-flex xs12 sm6>
-        <CustomCard
+        <BaseCustomCard
           color="primary"
           title="Front Door 01"
           text="Camera 01"
@@ -12,10 +12,10 @@
               <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
             </v-flex>
           </v-layout>
-        </CustomCard>
+        </BaseCustomCard>
       </v-flex>
       <v-flex xs12 sm6>
-        <CustomCard
+        <BaseCustomCard
           color="primary"
           title="Front Door 01"
           text="Camera 01"
@@ -25,10 +25,10 @@
               <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
             </v-flex>
           </v-layout>
-        </CustomCard>
+        </BaseCustomCard>
       </v-flex>
       <v-flex xs12 sm6>
-        <CustomCard
+        <BaseCustomCard
           color="primary"
           title="Front Door 01"
           text="Camera 01"
@@ -38,10 +38,10 @@
               <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
             </v-flex>
           </v-layout>
-        </CustomCard>
+        </BaseCustomCard>
       </v-flex>
       <v-flex xs12 sm6>
-        <CustomCard
+        <BaseCustomCard
           color="primary"
           title="Front Door 01"
           text="Camera 01"
@@ -51,7 +51,7 @@
               <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
             </v-flex>
           </v-layout>
-        </CustomCard>
+        </BaseCustomCard>
       </v-flex>
     </v-layout>
   </v-container>
@@ -59,7 +59,7 @@
 
 <script>
 import appConfig from '../app.config';
-import CustomCard from '@/components/CustomCard';
+import BaseCustomCard from '@/components/BaseCustomCard';
 
 export default {
   name: 'Surveillance',
@@ -81,7 +81,7 @@ export default {
   },
 
   components: {
-    CustomCard
+    BaseCustomCard
   }
 };
 </script>

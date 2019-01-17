@@ -1,44 +1,49 @@
 <template>
-  <v-container class="users-view" fluid fill-height>
-    <v-layout wrap>
-      <v-flex xs12>
-        <v-card>
-          <v-card-title>
-            <v-icon color="primary">fas fa-users fa-md fa-3x</v-icon>
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              :append-icon="search === '' ? 'fas fa-search' : 'fas fa-times'"
-              label="Search"
-              single-line
-              hide-details
-              @click:append="search = ''"
-            ></v-text-field>
-          </v-card-title>
-          <v-data-table
-            :headers="headers"
-            :items="listedUsers"
-            :pagination.sync="pagination"
-            :total-items="totalUsers"
-            :loading="loading"
-            class="elevation-1"
-            sort-icon="fas fa-caret-up"
-          >
-            <template slot="items" slot-scope="props" to="/users">
-              <td>{{ props.item.first_name }}</td>
-              <td>{{ props.item.last_name }}</td>
-              <td>{{ props.item.email }}</td>
-              <td>{{ props.item.slug }}</td>
-              <td>{{ props.item.email_verified_at ? props.item.email_verified_at : false | moment }}</td>
-              <td>{{ props.item.created_at | moment }}</td>
-              <td>{{ props.item.formatted_allocated_drive_bytes }}</td>
-              <td>{{ props.item.formatted_used_drive_bytes }}</td>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div class="users-view">
+    <router-view/>
+    <v-container grid-list-xl fill-height>
+      <v-layout wrap>
+        <v-flex xs12>
+          <v-card>
+            <v-card-title>
+              <v-icon color="primary">fas fa-users fa-md fa-3x</v-icon>
+              <v-spacer></v-spacer>
+              <v-text-field
+                v-model="search"
+                :append-icon="search === '' ? 'fas fa-search' : 'fas fa-times'"
+                label="Search"
+                single-line
+                hide-details
+                @click:append="search = ''"
+              ></v-text-field>
+            </v-card-title>
+            <v-data-table
+              :headers="headers"
+              :items="listedUsers"
+              :pagination.sync="pagination"
+              :total-items="totalUsers"
+              :loading="loading"
+              class="elevation-1"
+              sort-icon="fas fa-caret-up"
+            >
+              <template slot="items" slot-scope="props">
+                <tr @click="$router.push({ path: `/users/${props.item.id}` })">
+                  <td>{{ props.item.first_name }}</td>
+                  <td>{{ props.item.last_name }}</td>
+                  <td>{{ props.item.email }}</td>
+                  <td>{{ props.item.slug }}</td>
+                  <td>{{ props.item.email_verified_at ? props.item.email_verified_at : false | moment }}</td>
+                  <td>{{ props.item.created_at | moment }}</td>
+                  <td>{{ props.item.formatted_allocated_drive_bytes }}</td>
+                  <td>{{ props.item.formatted_used_drive_bytes }}</td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 
 <script>
