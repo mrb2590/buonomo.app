@@ -2,56 +2,44 @@
   <v-container class="surveillance-view" grid-list-xl fill-height fluid>
     <v-layout wrap>
       <v-flex xs12 sm6>
-        <BaseCustomCard
-          color="primary"
-          title="Front Door 01"
-          text="Camera 01"
-        >
-          <v-layout wrap>
-            <v-flex xs12 align-h="center">
-              <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
-            </v-flex>
-          </v-layout>
-        </BaseCustomCard>
+        <v-card>
+          <v-card-title primary-title>
+            <h2 class="headline primary--text">Front Door 01</h2>
+          </v-card-title>
+          <v-card-text>
+            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
+          </v-card-text>
+        </v-card>
       </v-flex>
       <v-flex xs12 sm6>
-        <BaseCustomCard
-          color="primary"
-          title="Front Door 01"
-          text="Camera 01"
-        >
-          <v-layout wrap>
-            <v-flex xs12>
-              <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
-            </v-flex>
-          </v-layout>
-        </BaseCustomCard>
+        <v-card>
+          <v-card-title primary-title>
+            <h2 class="headline primary--text">Front Door 01</h2>
+          </v-card-title>
+          <v-card-text>
+            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
+          </v-card-text>
+        </v-card>
       </v-flex>
       <v-flex xs12 sm6>
-        <BaseCustomCard
-          color="primary"
-          title="Front Door 01"
-          text="Camera 01"
-        >
-          <v-layout wrap>
-            <v-flex xs12>
-              <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
-            </v-flex>
-          </v-layout>
-        </BaseCustomCard>
+        <v-card>
+          <v-card-title primary-title>
+            <h2 class="headline primary--text">Front Door 01</h2>
+          </v-card-title>
+          <v-card-text>
+            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
+          </v-card-text>
+        </v-card>
       </v-flex>
       <v-flex xs12 sm6>
-        <BaseCustomCard
-          color="primary"
-          title="Front Door 01"
-          text="Camera 01"
-        >
-          <v-layout wrap>
-            <v-flex xs12>
-              <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
-            </v-flex>
-          </v-layout>
-        </BaseCustomCard>
+        <v-card>
+          <v-card-title primary-title>
+            <h2 class="headline primary--text">Front Door 01</h2>
+          </v-card-title>
+          <v-card-text>
+            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
+          </v-card-text>
+        </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -59,7 +47,6 @@
 
 <script>
 import appConfig from '../app.config';
-import BaseCustomCard from '@/components/BaseCustomCard';
 
 export default {
   name: 'Surveillance',
@@ -72,16 +59,6 @@ export default {
         content: 'View surveillance feeds.'
       }
     ]
-  },
-
-  methods: {
-    embedStream () {
-
-    }
-  },
-
-  components: {
-    BaseCustomCard
   }
 };
 </script>
