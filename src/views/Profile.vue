@@ -12,7 +12,7 @@
                 <h2 class="headline primary--text">Edit Your Avatar</h2>
               </v-card-title>
               <v-card-text>
-                edit
+                <FormUpdateAvatar/>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -60,6 +60,7 @@
 import appConfig from '../app.config';
 import { mapState } from 'vuex';
 import UserProfileOverview from '@/components/UserProfileOverview';
+import FormUpdateAvatar from '@/components/FormUpdateAvatar';
 import FormUpdateProfile from '@/components/FormUpdateProfile';
 import FormUpdateEmail from '@/components/FormUpdateEmail';
 import FormUpdatePassword from '@/components/FormUpdatePassword';
@@ -79,6 +80,7 @@ export default {
 
   components: {
     UserProfileOverview,
+    FormUpdateAvatar,
     FormUpdateProfile,
     FormUpdateEmail,
     FormUpdatePassword

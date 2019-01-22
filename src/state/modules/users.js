@@ -27,7 +27,12 @@ export const actions = {
    * Fetch a user object from cache or the API.
    */
   async fetchUserById ({ commit, state }, userId) {
-    return axios.get(`${apiUrl}/v1/users/${userId}`)
+    return axios.get(`${apiUrl}/v1/users/${userId}`, {
+      params: {
+        with_roles: 1,
+        with_avatar: 1
+      }
+    })
       .then(response => {
         commit('SET_CURRENT_USER', response.data.data);
         return response.data.data;

@@ -1,7 +1,7 @@
 <template>
   <div class="users-view">
     <router-view/>
-    <v-container grid-list-xl fill-height>
+    <v-container grid-list-xl fluid fill-height>
       <v-layout wrap>
         <v-flex xs12>
           <v-card>
@@ -23,7 +23,7 @@
               :pagination.sync="pagination"
               :total-items="totalUsers"
               :loading="loading"
-              class="elevation-1"
+              class="elevation-1 users-table"
               sort-icon="fas fa-caret-up"
             >
               <template slot="items" slot-scope="props">
@@ -164,7 +164,7 @@ export default {
       if (this.search) {
         params.search = this.search;
       }
-      return axios.get('https://dev.api.buonomo.app/v1/users', { params: params })
+      return axios.get(`${process.env.VUE_APP_API_URL}/v1/users`, { params: params })
         .then(res => {
           this.loading = false;
           this.listedUsers = res.data.data;
@@ -185,8 +185,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.users-view /deep/ .fa-caret-up {
+.users-table /deep/ .fa-caret-up {
   float: right;
   margin-left: 4px;
+}
+
+.users-table /deep/ th {
+  min-width: 150px;
 }
 </style>

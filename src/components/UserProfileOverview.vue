@@ -1,7 +1,7 @@
 <template>
   <v-card class="user-profile-overview text-xs-center">
     <v-card-title primary-title class="avatar-title">
-      <img class="main-avatar" src="https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheType=GraphicShirt&clotheColor=Black&eyeType=WinkWacky&eyebrowType=RaisedExcitedNatural&facialHairColor=Brown&facialHairType=BeardLight&graphicType=Pizza&mouthType=Smile&skinColor=Light&topType=Hat" alt="avatar">
+      <img class="main-avatar" :src="user.avatar.url" alt="avatar">
     </v-card-title>
     <v-card-text>
       <div v-if="user">
@@ -10,6 +10,10 @@
         <p>{{ user.email }}</p>
         <p>Used {{ user.formatted_used_drive_bytes }} of {{ user.formatted_allocated_drive_bytes }} drive storage</p>
         <p v-if="withId">{{ user.id }}</p>
+        <div v-if="user.roles">
+          Roles:
+          <p v-for="(role, index) in user.roles" :key="index">{{ role.display_name }}</p>
+        </div>
       </div>
     </v-card-text>
   </v-card>

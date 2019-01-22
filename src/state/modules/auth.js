@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Vue from 'vue';
 import { getSavedState, saveState } from '@/functions';
 
 const apiUrl = process.env.VUE_APP_API_URL;
@@ -44,8 +43,30 @@ export const mutations = {
     state.user = user ? { ...user } : null;
   },
 
-  SET_USER_ATTRIBUTE (state, { attribute, newValue }) {
-    state.user = Vue.set(state.user, attribute, newValue);
+  SET_USER_PROFILE (state, data) {
+    state.user.first_name = data.first_name;
+    state.user.last_name = data.last_name;
+  },
+
+  SET_USER_EMAIL (state, data) {
+    state.user.email = data.email;
+  },
+
+  SET_USER_AVATAR (state, data) {
+    state.user.style = data.style;
+    state.user.accessories = data.accessories;
+    state.user.clothes_type = data.clothes_type;
+    state.user.eyebrow_type = data.eyebrow_type;
+    state.user.eye_type = data.eye_type;
+    state.user.facial_hair_type = data.facial_hair_type;
+    state.user.facial_hair_color = data.facial_hair_color;
+    state.user.hair_color = data.hair_color;
+    state.user.mouth_type = data.mouth_type;
+    state.user.skin_color = data.skin_color;
+    state.user.top_type = data.top_type;
+    state.user.created_at = data.created_at;
+    state.user.updated_at = data.updated_at;
+    state.user.url = data.url;
   }
 };
 
@@ -71,6 +92,19 @@ export const getters = {
     if (state.user) {
       return `${state.user.first_name.charAt(0)}${state.user.last_name.charAt(0)}`;
     }
+  },
+
+  /**
+   * Return whether the user has the user manager role.
+   */
+  isUserManager (state) {
+    if (!state.user) return false;
+    for (let i = 0; i < state.user.roles.length; i++) {
+      if (state.user.roles[i].name === 'user_manager') {
+        return true;
+      }
+    }
+    return false;
   }
 };
 
@@ -158,7 +192,12 @@ export const actions = {
     if (!force && state.user) {
       return;
     }
-    return axios.get(`${apiUrl}/v1/user`)
+    return axios.get(`${apiUrl}/v1/user`, {
+      params: {
+        with_roles: 1,
+        with_avatar: 1
+      }
+    })
       .then(response => {
         commit('SET_USER', response.data.data);
         return response.data.data;
@@ -183,7 +222,7 @@ export const actions = {
       last_name: form.lastName
     })
       .then(response => {
-        commit('SET_USER', response.data.data);
+        commit('SET_USER_PROFILE', response.data.data);
         return response.data.data;
       });
   },
@@ -196,7 +235,7 @@ export const actions = {
       email: form.email
     })
       .then(response => {
-        commit('SET_USER', response.data.data);
+        commit('SET_USER_EMAIL', response.data.data);
         return response.data.data;
       });
   },
@@ -210,9 +249,6 @@ export const actions = {
       password: form.password,
       password_confirmation: form.passwordConfirmation
     })
-      .then(response => {
-        commit('SET_USER', response.data.data);
-        return response.data.data;
-      });
+      .then(response => response.data.data);
   }
 };

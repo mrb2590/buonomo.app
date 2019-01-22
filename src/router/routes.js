@@ -77,6 +77,14 @@ export default [
       displayName: 'Users',
       authRequired: true
     },
+    beforeEnter (routeTo, routeFrom, next) {
+      if (!store.getters['auth/isUserManager']) {
+        next({ name: 'unauthorized' });
+      }
+
+      // Navigate back to previous page, or home as a fallback
+      next();
+    },
     children: [
       {
         path: ':id',
@@ -132,6 +140,17 @@ export default [
     component: notFoundView,
     meta: {
       displayName: '404'
+    },
+    // Allows props to be passed to the 404 page through route
+    // params, such as `resource` to define what wasn't found.
+    props: true
+  },
+  {
+    path: '/unauthorized',
+    name: 'unauthorized',
+    component: () => lazyLoadView(import(/* webpackChunkName: "auth" */ '../views/Unauthorized')),
+    meta: {
+      displayName: 'Unauthorized'
     },
     // Allows props to be passed to the 404 page through route
     // params, such as `resource` to define what wasn't found.

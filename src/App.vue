@@ -25,7 +25,7 @@
       <v-list v-if="signedIn" dense>
         <v-list-tile avatar to="/profile">
           <v-list-tile-avatar>
-            <img src="https://avataaars.io/?accessoriesType=Sunglasses&avatarStyle=Circle&clotheType=GraphicShirt&clotheColor=Black&eyeType=WinkWacky&eyebrowType=RaisedExcitedNatural&facialHairColor=Brown&facialHairType=BeardLight&graphicType=Pizza&mouthType=Smile&skinColor=Light&topType=Hat">
+            <img v-if="user" :src="user.avatar.url" alt="avatar">
           </v-list-tile-avatar>
 
           <v-list-tile-content>
@@ -105,6 +105,7 @@
           append-icon="fas fa-fw fa-chevron-down nav-toggle"
           :value="$route.path.startsWith('/users')"
           no-action
+          v-if="signedIn && isUserManager"
         >
           <v-list-tile slot="activator">
             <v-list-tile-title>User Management</v-list-tile-title>
@@ -198,8 +199,9 @@ export default {
 
   computed: {
     ...mapState('app', ['snackbar', 'showProgress']),
+    ...mapState('auth', ['user']),
     ...mapState('preferences', ['darkMode']),
-    ...mapGetters('auth', ['signedIn', 'fullName'])
+    ...mapGetters('auth', ['signedIn', 'fullName', 'isUserManager'])
   },
 
   methods: {
