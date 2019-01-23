@@ -257,7 +257,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('auth', ['updateEmail']),
+    ...mapActions('auth', ['updateAvatar']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {
@@ -267,15 +267,25 @@ export default {
 
     submit () {
       this.SET_SHOW_PROGRESS(true);
-      return this.updateEmail({
+      return this.updateAvatar({
         id: this.user.id,
-        email: this.email
+        style: this.style,
+        accessories: this.accessories,
+        clothesType: this.clothesType,
+        eyebrowType: this.eyebrowType,
+        eyeType: this.eyeType,
+        facialHairType: this.facialHairType,
+        facialHairColor: this.facialHairColor,
+        hairColor: this.hairColor,
+        mouthType: this.mouthType,
+        skinColor: this.skinColor,
+        topType: this.topType
       })
         .then((user) => {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: 'Your email has been updated.',
+            text: 'Your avatar has been updated.',
             class: 'success--text'
           });
         })
@@ -283,7 +293,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: processInvalidForm(error, 'Failed to update your email address.'),
+            text: processInvalidForm(error, 'Failed to update your avatar.'),
             class: 'error--text'
           });
         });
@@ -291,7 +301,7 @@ export default {
   },
 
   mounted () {
-    axios.get(`${process.env.VUE_APP_API_URL}/v1/avatar/options`)
+    axios.get(`${process.env.VUE_APP_API_URL}/v1/avatars/options`)
       .then(res => {
         this.options = res.data;
       })

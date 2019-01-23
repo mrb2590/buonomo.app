@@ -46,27 +46,30 @@ export const mutations = {
   SET_USER_PROFILE (state, data) {
     state.user.first_name = data.first_name;
     state.user.last_name = data.last_name;
+    state.user.updated_at = data.updated_at;
   },
 
   SET_USER_EMAIL (state, data) {
     state.user.email = data.email;
+    state.user.updated_at = data.updated_at;
   },
 
   SET_USER_AVATAR (state, data) {
-    state.user.style = data.style;
-    state.user.accessories = data.accessories;
-    state.user.clothes_type = data.clothes_type;
-    state.user.eyebrow_type = data.eyebrow_type;
-    state.user.eye_type = data.eye_type;
-    state.user.facial_hair_type = data.facial_hair_type;
-    state.user.facial_hair_color = data.facial_hair_color;
-    state.user.hair_color = data.hair_color;
-    state.user.mouth_type = data.mouth_type;
-    state.user.skin_color = data.skin_color;
-    state.user.top_type = data.top_type;
-    state.user.created_at = data.created_at;
-    state.user.updated_at = data.updated_at;
-    state.user.url = data.url;
+    state.user.avatar.style = data.style;
+    state.user.avatar.accessories = data.accessories;
+    state.user.avatar.clothes_type = data.clothes_type;
+    state.user.avatar.eyebrow_type = data.eyebrow_type;
+    state.user.avatar.eye_type = data.eye_type;
+    state.user.avatar.facial_hair_type = data.facial_hair_type;
+    state.user.avatar.facial_hair_color = data.facial_hair_color;
+    state.user.avatar.hair_color = data.hair_color;
+    state.user.avatar.mouth_type = data.mouth_type;
+    state.user.avatar.skin_color = data.skin_color;
+    state.user.avatar.top_type = data.top_type;
+    state.user.avatar.created_at = data.created_at;
+    state.user.avatar.updated_at = data.updated_at;
+    state.user.avatar.url = data.url;
+    state.user.avatar.updated_at = data.updated_at;
   }
 };
 
@@ -250,5 +253,28 @@ export const actions = {
       password_confirmation: form.passwordConfirmation
     })
       .then(response => response.data.data);
+  },
+
+  /**
+   * Update the user's avatar.
+   */
+  async updateAvatar ({ commit }, form) {
+    return axios.patch(`${apiUrl}/v1/users/${form.id}/avatar`, {
+      style: form.style,
+      accessories: form.accessories,
+      clothes_type: form.clothesType,
+      eyebrow_type: form.eyebrowType,
+      eye_type: form.eyeType,
+      facial_hair_type: form.facialHairType,
+      facial_hair_color: form.facialHairColor,
+      hair_color: form.hairColor,
+      mouth_type: form.mouthType,
+      skin_color: form.skinColor,
+      top_type: form.topType
+    })
+      .then(response => {
+        commit('SET_USER_AVATAR', response.data.data);
+        return response.data.data;
+      });
   }
 };
