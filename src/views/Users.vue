@@ -31,10 +31,7 @@
                   <td>{{ props.item.first_name }}</td>
                   <td>{{ props.item.last_name }}</td>
                   <td>{{ props.item.email }}</td>
-                  <td>{{ props.item.slug }}</td>
-                  <td>{{ props.item.email_verified_at ? props.item.email_verified_at : false | moment }}</td>
                   <td>{{ props.item.created_at | moment }}</td>
-                  <td>{{ props.item.formatted_allocated_drive_bytes }}</td>
                   <td>{{ props.item.formatted_used_drive_bytes }}</td>
                 </tr>
               </template>
@@ -96,24 +93,9 @@ export default {
         value: 'email'
       },
       {
-        text: 'Slug',
-        align: 'left',
-        value: 'slug'
-      },
-      {
-        text: 'Verified On',
-        align: 'left',
-        value: 'email_verified_at'
-      },
-      {
-        text: 'Joined',
+        text: 'Member Since',
         align: 'left',
         value: 'created_at'
-      },
-      {
-        text: 'Total Storage',
-        align: 'left',
-        value: 'allocated_drive_bytes'
       },
       {
         text: 'Used Storage',
@@ -142,7 +124,6 @@ export default {
 
   filters: {
     moment: function (timestamp) {
-      if (!timestamp) return 'Not verified';
       return moment.unix(timestamp).format('MM/DD/YYYY');
     }
   },
@@ -190,7 +171,13 @@ export default {
   margin-left: 4px;
 }
 
-.users-table /deep/ th {
-  min-width: 150px;
+.users-table {
+  /deep/ th {
+    min-width: 150px;
+  }
+
+  /deep/ td {
+    cursor: pointer;
+  }
 }
 </style>

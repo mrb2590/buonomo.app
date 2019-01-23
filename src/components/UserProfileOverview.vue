@@ -9,17 +9,22 @@
         <p>@{{ user.slug }}</p>
         <p>{{ user.email }}</p>
         <p>Used {{ user.formatted_used_drive_bytes }} of {{ user.formatted_allocated_drive_bytes }} drive storage</p>
+        <p>Member Since {{ user.created_at | moment }}</p>
+        <p v-if="user.email_verified_at">Email verified on {{ user.email_verified_at | moment }}</p>
+        <p v-if="!user.email_verified_at">Email is not verified</p>
+        <p v-if="user.roles && user.roles.length > 0">
+          <span v-for="(role, index) in user.roles" :key="index">{{ role.display_name }} </span>
+        </p>
+        <p v-if="!user.roles || user.roles.length === 0">No Roles</p>
         <p v-if="withId">{{ user.id }}</p>
-        <div v-if="user.roles">
-          Roles:
-          <p v-for="(role, index) in user.roles" :key="index">{{ role.display_name }}</p>
-        </div>
       </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   name: 'UserProfileOverview',
 
@@ -31,6 +36,12 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    }
+  },
+
+  filters: {
+    moment: function (timestamp) {
+      return moment.unix(timestamp).format('MMMM Do, YYYY');
     }
   }
 };

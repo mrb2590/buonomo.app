@@ -2,7 +2,7 @@
   <v-container class="users-edit-view" grid-list-xl fill-height>
     <v-layout wrap>
       <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3>
-        <UserProfileOverview v-if="currentUser" :user="currentUser" :with-id="true"/>
+        <UserProfileOverview v-if="user" :user="user" :with-id="true"/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -10,7 +10,7 @@
 
 <script>
 import UserProfileOverview from '@/components/UserProfileOverview';
-import { mapActions, mapState } from 'vuex';
+import axios from 'axios';
 
 export default {
   name: 'UsersEdit',
@@ -19,12 +19,31 @@ export default {
     UserProfileOverview
   },
 
-  methods: {
-    ...mapActions('users', ['fetchUserById'])
-  },
+  data: () => ({
+    user: null
+  }),
 
-  computed: {
-    ...mapState('users', ['currentUser'])
+  methods: {
+    fetchUserById (userId) {
+      return axios.get(`${process.env.VUE_APP_API_URL}/v1/users/${userId}`, {
+        params: {
+          with_roles: 1,
+          with_avatar: 1
+        }
+      })
+        .then(response => {
+          this.user = response.data.data;
+        })
+        .catch(error => {
+          console.log(error);
+          this.user = null;
+          this.commit('app/SET_SNACKBAR', {
+            show: true,
+            text: 'Failed to load the user\'s profile.',
+            class: 'error--text'
+          });
+        });
+    }
   },
 
   watch: {
