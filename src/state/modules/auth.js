@@ -55,9 +55,11 @@ export const mutations = {
   },
 
   SET_USER_AVATAR (state, data) {
-    state.user.avatar.style = data.style;
-    state.user.avatar.accessories = data.accessories;
-    state.user.avatar.clothes_type = data.clothes_type;
+    state.user.avatar.avatar_style = data.avatar_style;
+    state.user.avatar.accessories_type = data.accessories_type;
+    state.user.avatar.clothe_type = data.clothe_type;
+    state.user.avatar.clothe_color = data.clothe_color;
+    state.user.avatar.graphic_type = data.graphic_type;
     state.user.avatar.eyebrow_type = data.eyebrow_type;
     state.user.avatar.eye_type = data.eye_type;
     state.user.avatar.facial_hair_type = data.facial_hair_type;
@@ -264,9 +266,11 @@ export const actions = {
    */
   async updateAvatar ({ commit, state }, form) {
     return axios.patch(`${apiUrl}/v1/users/${form.id}/avatar`, {
-      style: form.style,
-      accessories: form.accessories,
-      clothes_type: form.clothesType,
+      avatar_style: form.avatarStyle,
+      accessories_type: form.accessoriesType,
+      clothe_type: form.clotheType,
+      clothe_color: form.clotheColor,
+      graphic_type: form.graphicType,
       eyebrow_type: form.eyebrowType,
       eye_type: form.eyeType,
       facial_hair_type: form.facialHairType,

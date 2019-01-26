@@ -3,37 +3,59 @@
     <v-layout wrap>
       <v-flex xs12>
         <v-select
-          v-model="style"
-          name="style"
-          label="Background Style"
+          v-model="avatarStyle"
+          name="avatarStyle"
+          label="Avatar Style"
           required
-          :error-messages="styleErrors"
-          @input="$v.style.$touch()"
-          @blur="$v.style.$touch()"
+          :error-messages="avatarStyleErrors"
+          @input="$v.avatarStyle.$touch()"
+          @blur="$v.avatarStyle.$touch()"
           :disabled="showProgress"
-          :items="options.styles"
+          :items="options.avatarStyles"
         ></v-select>
         <v-select
-          v-model="accessories"
-          name="accessories"
-          label="Accessory"
+          v-model="accessoriesType"
+          name="accessoriesType"
+          label="Accessories Type"
           required
-          :error-messages="accessoriesErrors"
-          @input="$v.accessories.$touch()"
-          @blur="$v.accessories.$touch()"
+          :error-messages="accessoriesTypeErrors"
+          @input="$v.accessoriesType.$touch()"
+          @blur="$v.accessoriesType.$touch()"
           :disabled="showProgress"
-          :items="options.accessories"
+          :items="options.accessoriesTypes"
         ></v-select>
         <v-select
-          v-model="clothesType"
-          name="clothesType"
-          label="Clothes Type"
+          v-model="clotheType"
+          name="clotheType"
+          label="Clothe Type"
           required
-          :error-messages="clothesTypeErrors"
-          @input="$v.clothesType.$touch()"
-          @blur="$v.clothesType.$touch()"
+          :error-messages="clotheTypeErrors"
+          @input="$v.clotheType.$touch()"
+          @blur="$v.clotheType.$touch()"
           :disabled="showProgress"
-          :items="options.clothesTypes"
+          :items="options.clotheTypes"
+        ></v-select>
+        <v-select
+          v-model="clotheColor"
+          name="clotheColor"
+          label="Clothe Color"
+          required
+          :error-messages="clotheColorErrors"
+          @input="$v.clotheColor.$touch()"
+          @blur="$v.clotheColor.$touch()"
+          :disabled="showProgress"
+          :items="options.clotheColors"
+        ></v-select>
+        <v-select
+          v-model="graphicType"
+          name="graphicType"
+          label="Clothe Type"
+          required
+          :error-messages="graphicTypeErrors"
+          @input="$v.graphicType.$touch()"
+          @blur="$v.graphicType.$touch()"
+          :disabled="showProgress"
+          :items="options.graphicTypes"
         ></v-select>
         <v-select
           v-model="eyebrowType"
@@ -145,9 +167,11 @@ export default {
 
   data: () => ({
     options: {},
-    style: '',
-    accessories: '',
-    clothesType: '',
+    avatarStyle: '',
+    accessoriesType: '',
+    clotheType: '',
+    clotheColor: '',
+    graphicType: '',
     eyebrowType: '',
     eyeType: '',
     facialHairType: '',
@@ -161,9 +185,11 @@ export default {
   mixins: [validationMixin],
 
   validations: {
-    style: { required },
-    accessories: { required },
-    clothesType: { required },
+    avatarStyle: { required },
+    accessoriesType: { required },
+    clotheType: { required },
+    clotheColor: { required },
+    graphicType: { required },
     eyebrowType: { required },
     eyeType: { required },
     facialHairType: { required },
@@ -178,24 +204,38 @@ export default {
     ...mapState('auth', ['user']),
     ...mapState('app', ['showProgress']),
 
-    styleErrors () {
+    avatarStyleErrors () {
       const errors = [];
-      if (!this.$v.style.$dirty) return errors;
-      !this.$v.style.required && errors.push('Style is required');
+      if (!this.$v.avatarStyle.$dirty) return errors;
+      !this.$v.avatarStyle.required && errors.push('Avatar Style is required');
       return errors;
     },
 
-    accessoriesErrors () {
+    accessoriesTypeErrors () {
       const errors = [];
-      if (!this.$v.accessories.$dirty) return errors;
-      !this.$v.accessories.required && errors.push('Accessory is required');
+      if (!this.$v.accessoriesType.$dirty) return errors;
+      !this.$v.accessoriesType.required && errors.push('Accessories Type is required');
       return errors;
     },
 
-    clothesTypeErrors () {
+    clotheTypeErrors () {
       const errors = [];
-      if (!this.$v.clothesType.$dirty) return errors;
-      !this.$v.clothesType.required && errors.push('Clothes Type is required');
+      if (!this.$v.clotheType.$dirty) return errors;
+      !this.$v.clotheType.required && errors.push('Clothe Type is required');
+      return errors;
+    },
+
+    clotheColorErrors () {
+      const errors = [];
+      if (!this.$v.clotheColor.$dirty) return errors;
+      !this.$v.clotheColor.required && errors.push('Clothe Color is required');
+      return errors;
+    },
+
+    graphicTypeErrors () {
+      const errors = [];
+      if (!this.$v.graphicType.$dirty) return errors;
+      !this.$v.graphicType.required && errors.push('Graphic Type is required');
       return errors;
     },
 
@@ -269,9 +309,11 @@ export default {
       this.SET_SHOW_PROGRESS(true);
       return this.updateAvatar({
         id: this.user.id,
-        style: this.style,
-        accessories: this.accessories,
-        clothesType: this.clothesType,
+        avatarStyle: this.avatarStyle,
+        accessoriesType: this.accessoriesType,
+        clotheType: this.clotheType,
+        clotheColor: this.clotheColor,
+        graphicType: this.graphicType,
         eyebrowType: this.eyebrowType,
         eyeType: this.eyeType,
         facialHairType: this.facialHairType,
@@ -312,9 +354,11 @@ export default {
           class: 'error--text'
         });
       });
-    this.style = this.user.avatar.style;
-    this.accessories = this.user.avatar.accessories;
-    this.clothesType = this.user.avatar.clothes_type;
+    this.avatarStyle = this.user.avatar.avatar_style;
+    this.accessoriesType = this.user.avatar.accessories_type;
+    this.clotheType = this.user.avatar.clothe_type;
+    this.clotheColor = this.user.avatar.clothe_color;
+    this.graphicType = this.user.avatar.graphic_type;
     this.eyebrowType = this.user.avatar.eyebrow_type;
     this.eyeType = this.user.avatar.eye_type;
     this.facialHairType = this.user.avatar.facial_hair_type;
