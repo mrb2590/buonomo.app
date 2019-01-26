@@ -22,14 +22,14 @@
         <v-divider></v-divider>
       </v-list>
 
-      <v-list v-if="signedIn" dense>
+      <v-list v-if="signedIn && user" dense>
         <v-list-tile avatar to="/profile">
           <v-list-tile-avatar>
-            <img v-if="user" :src="user.avatar.url" alt="avatar">
+            <img :src="user.avatar.url" alt="avatar">
           </v-list-tile-avatar>
 
           <v-list-tile-content>
-            <v-list-tile-title>{{ fullName }}</v-list-tile-title>
+            <v-list-tile-title>{{ user.first_name }} {{ user.last_name }}</v-list-tile-title>
           </v-list-tile-content>
 
           <v-list-tile-action>
@@ -201,7 +201,7 @@ export default {
     ...mapState('app', ['snackbar', 'showProgress']),
     ...mapState('auth', ['user']),
     ...mapState('preferences', ['darkMode']),
-    ...mapGetters('auth', ['signedIn', 'fullName', 'isUserManager'])
+    ...mapGetters('auth', ['signedIn', 'isUserManager'])
   },
 
   methods: {

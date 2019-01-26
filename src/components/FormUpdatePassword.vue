@@ -97,7 +97,7 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapState('users', ['user']),
     ...mapState('app', ['showProgress']),
 
     currentPasswordErrors () {
@@ -128,7 +128,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('auth', ['updatePassword']),
+    ...mapActions('users', ['updatePassword']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {

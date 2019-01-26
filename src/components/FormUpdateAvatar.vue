@@ -201,7 +201,7 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapState('users', ['user']),
     ...mapState('app', ['showProgress']),
 
     avatarStyleErrors () {
@@ -297,7 +297,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('auth', ['updateAvatar']),
+    ...mapActions('users', ['updateAvatar']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {
@@ -342,6 +342,24 @@ export default {
     }
   },
 
+  watch: {
+    user () {
+      this.avatarStyle = this.user.avatar.avatar_style;
+      this.accessoriesType = this.user.avatar.accessories_type;
+      this.clotheType = this.user.avatar.clothe_type;
+      this.clotheColor = this.user.avatar.clothe_color;
+      this.graphicType = this.user.avatar.graphic_type;
+      this.eyebrowType = this.user.avatar.eyebrow_type;
+      this.eyeType = this.user.avatar.eye_type;
+      this.facialHairType = this.user.avatar.facial_hair_type;
+      this.facialHairColor = this.user.avatar.facial_hair_color;
+      this.hairColor = this.user.avatar.hair_color;
+      this.mouthType = this.user.avatar.mouth_type;
+      this.skinColor = this.user.avatar.skin_color;
+      this.topType = this.user.avatar.top_type;
+    }
+  },
+
   mounted () {
     axios.get(`${process.env.VUE_APP_API_URL}/v1/avatars/options`)
       .then(res => {
@@ -354,19 +372,6 @@ export default {
           class: 'error--text'
         });
       });
-    this.avatarStyle = this.user.avatar.avatar_style;
-    this.accessoriesType = this.user.avatar.accessories_type;
-    this.clotheType = this.user.avatar.clothe_type;
-    this.clotheColor = this.user.avatar.clothe_color;
-    this.graphicType = this.user.avatar.graphic_type;
-    this.eyebrowType = this.user.avatar.eyebrow_type;
-    this.eyeType = this.user.avatar.eye_type;
-    this.facialHairType = this.user.avatar.facial_hair_type;
-    this.facialHairColor = this.user.avatar.facial_hair_color;
-    this.hairColor = this.user.avatar.hair_color;
-    this.mouthType = this.user.avatar.mouth_type;
-    this.skinColor = this.user.avatar.skin_color;
-    this.topType = this.user.avatar.top_type;
   }
 };
 </script>

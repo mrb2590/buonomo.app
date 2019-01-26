@@ -87,7 +87,7 @@ export default [
     },
     children: [
       {
-        path: ':id',
+        path: ':username',
         component: () => lazyLoadView(import(/* webpackChunkName: "profile" */ '../views/UsersEdit'))
       }
     ]

@@ -1,7 +1,7 @@
 <template>
   <v-card class="user-profile-overview text-xs-center">
     <v-card-title primary-title class="avatar-title">
-      <img class="main-avatar" :src="user.avatar.url" alt="avatar">
+      <img v-if="user" class="main-avatar" :src="user.avatar.url" alt="avatar">
     </v-card-title>
     <v-card-text>
       <div v-if="user">
@@ -24,16 +24,12 @@
 
 <script>
 import moment from 'moment';
+import { mapState } from 'vuex';
 
 export default {
   name: 'UserProfileOverview',
 
   props: {
-    user: {
-      type: Object,
-      required: true
-    },
-
     admin: {
       type: Boolean,
       required: false,
@@ -45,6 +41,10 @@ export default {
     moment: function (timestamp) {
       return moment.unix(timestamp).format('MMMM Do, YYYY');
     }
+  },
+
+  computed: {
+    ...mapState('users', ['user'])
   }
 };
 </script>

@@ -41,37 +41,6 @@ export const mutations = {
 
   SET_USER (state, user) {
     state.user = user ? { ...user } : null;
-  },
-
-  SET_USER_PROFILE (state, data) {
-    state.user.first_name = data.first_name;
-    state.user.last_name = data.last_name;
-    state.user.updated_at = data.updated_at;
-  },
-
-  SET_USER_EMAIL (state, data) {
-    state.user.email = data.email;
-    state.user.updated_at = data.updated_at;
-  },
-
-  SET_USER_AVATAR (state, data) {
-    state.user.avatar.avatar_style = data.avatar_style;
-    state.user.avatar.accessories_type = data.accessories_type;
-    state.user.avatar.clothe_type = data.clothe_type;
-    state.user.avatar.clothe_color = data.clothe_color;
-    state.user.avatar.graphic_type = data.graphic_type;
-    state.user.avatar.eyebrow_type = data.eyebrow_type;
-    state.user.avatar.eye_type = data.eye_type;
-    state.user.avatar.facial_hair_type = data.facial_hair_type;
-    state.user.avatar.facial_hair_color = data.facial_hair_color;
-    state.user.avatar.hair_color = data.hair_color;
-    state.user.avatar.mouth_type = data.mouth_type;
-    state.user.avatar.skin_color = data.skin_color;
-    state.user.avatar.top_type = data.top_type;
-    state.user.avatar.created_at = data.created_at;
-    state.user.avatar.updated_at = data.updated_at;
-    state.user.avatar.url = data.url;
-    state.user.avatar.updated_at = data.updated_at;
   }
 };
 
@@ -81,22 +50,6 @@ export const getters = {
    */
   signedIn (state) {
     return !!state.token;
-  },
-
-  /**
-   * Return a user's full name.
-   */
-  fullName (state) {
-    if (state.user) return `${state.user.first_name} ${state.user.last_name}`;
-  },
-
-  /**
-   * Return whether a user's initials'.
-   */
-  initials (state) {
-    if (state.user) {
-      return `${state.user.first_name.charAt(0)}${state.user.last_name.charAt(0)}`;
-    }
   },
 
   /**

@@ -26,6 +26,18 @@
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
+        <v-text-field
+          v-model="username"
+          name="username"
+          label="Userame"
+          required
+          :error-messages="usernameErrors"
+          @input="$v.username.$touch()"
+          @blur="$v.username.$touch()"
+          @keyup="checkFormIsEmpty"
+          autocomplete="off"
+          :disabled="showProgress"
+        ></v-text-field>
       </v-flex>
       <v-flex xs12 text-xs-right>
         <v-btn
@@ -46,8 +58,10 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
+import { required, helpers } from 'vuelidate/lib/validators';
 import { processInvalidForm } from '@/functions';
+
+const usernameRegex = helpers.regex('alpha', /^[a-zA-Z0-9._-]{0,30}$/);
 
 export default {
   name: 'FormUpdateProfile',
@@ -55,18 +69,20 @@ export default {
   data: () => ({
     formIsEmpty: false,
     firstName: '',
-    lastName: ''
+    lastName: '',
+    username: ''
   }),
 
   mixins: [validationMixin],
 
   validations: {
     firstName: { required },
-    lastName: { required }
+    lastName: { required },
+    username: { required, usernameRegex }
   },
 
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapState('users', ['user']),
     ...mapState('app', ['showProgress']),
 
     firstNameErrors () {
@@ -81,11 +97,19 @@ export default {
       if (!this.$v.lastName.$dirty) return errors;
       !this.$v.lastName.required && errors.push('Last name is required');
       return errors;
+    },
+
+    usernameErrors () {
+      const errors = [];
+      if (!this.$v.username.$dirty) return errors;
+      !this.$v.username.required && errors.push('Last name is required');
+      !this.$v.username.usernameRegex && errors.push('Username can only contain a-Z, 0-9, _, -, .');
+      return errors;
     }
   },
 
   methods: {
-    ...mapActions('auth', ['updateProfile']),
+    ...mapActions('users', ['updateProfile']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {
@@ -98,7 +122,8 @@ export default {
       return this.updateProfile({
         id: this.user.id,
         firstName: this.firstName,
-        lastName: this.lastName
+        lastName: this.lastName,
+        username: this.username
       })
         .then((user) => {
           this.SET_SHOW_PROGRESS(false);
@@ -134,9 +159,12 @@ export default {
     }
   },
 
-  mounted () {
-    this.firstName = this.user.first_name;
-    this.lastName = this.user.last_name;
+  watch: {
+    user () {
+      this.firstName = this.user.first_name;
+      this.lastName = this.user.last_name;
+      this.username = this.user.username;
+    }
   }
 };
 </script>

@@ -10,7 +10,7 @@
 
 <script>
 import UserProfileOverview from '@/components/UserProfileOverview';
-import axios from 'axios';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'UsersEdit',
@@ -19,41 +19,22 @@ export default {
     UserProfileOverview
   },
 
-  data: () => ({
-    user: null
-  }),
+  computed: {
+    ...mapState('users', ['user'])
+  },
 
   methods: {
-    fetchUserById (userId) {
-      return axios.get(`${process.env.VUE_APP_API_URL}/v1/users/${userId}`, {
-        params: {
-          with_roles: 1,
-          with_avatar: 1
-        }
-      })
-        .then(response => {
-          this.user = response.data.data;
-        })
-        .catch(error => {
-          console.log(error);
-          this.user = null;
-          this.commit('app/SET_SNACKBAR', {
-            show: true,
-            text: 'Failed to load the user\'s profile.',
-            class: 'error--text'
-          });
-        });
-    }
+    ...mapActions('users', ['fetchUser'])
   },
 
   watch: {
     $route (to, from) {
-      this.fetchUserById(this.$route.params.id);
+      this.fetchUser(this.$route.params.username);
     }
   },
 
   mounted () {
-    this.fetchUserById(this.$route.params.id);
+    this.fetchUser(this.$route.params.username);
   }
 };
 </script>

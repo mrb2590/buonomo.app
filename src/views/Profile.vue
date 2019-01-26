@@ -58,7 +58,7 @@
 
 <script>
 import appConfig from '../app.config';
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import UserProfileOverview from '@/components/UserProfileOverview';
 import FormUpdateAvatar from '@/components/FormUpdateAvatar';
 import FormUpdateProfile from '@/components/FormUpdateProfile';
@@ -88,6 +88,14 @@ export default {
 
   computed: {
     ...mapState('auth', ['user'])
+  },
+
+  methods: {
+    ...mapMutations('users', ['SET_USER'])
+  },
+
+  mounted () {
+    this.SET_USER(this.user);
   }
 };
 </script>

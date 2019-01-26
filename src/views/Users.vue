@@ -28,14 +28,16 @@
             >
               <template slot="items" slot-scope="props">
                 <tr
-                  :class="{ 'primary--text': $route.params.id === props.item.id }"
-                  @click="$router.push({ path: `/users/${props.item.id}` })"
+                  :class="{ 'primary--text': $route.params.username === props.item.username }"
+                  @click="$router.push({ path: `/users/${props.item.username}` })"
                 >
                   <td>{{ props.item.first_name }}</td>
                   <td>{{ props.item.last_name }}</td>
                   <td>{{ props.item.email }}</td>
+                  <td>{{ props.item.username }}</td>
                   <td>{{ props.item.created_at | moment }}</td>
                   <td>{{ props.item.formatted_used_drive_bytes }}</td>
+                  <td>{{ props.item.formatted_allocated_drive_bytes }}</td>
                 </tr>
               </template>
             </v-data-table>
@@ -96,6 +98,11 @@ export default {
         value: 'email'
       },
       {
+        text: 'Username',
+        align: 'left',
+        value: 'username'
+      },
+      {
         text: 'Member Since',
         align: 'left',
         value: 'created_at'
@@ -104,6 +111,11 @@ export default {
         text: 'Used Storage',
         align: 'left',
         value: 'used_drive_bytes'
+      },
+      {
+        text: 'Allocated Storage',
+        align: 'left',
+        value: 'allocated_drive_bytes'
       }
     ]
   }),

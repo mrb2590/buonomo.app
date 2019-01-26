@@ -53,7 +53,7 @@ export default {
   },
 
   computed: {
-    ...mapState('auth', ['user']),
+    ...mapState('users', ['user']),
     ...mapState('app', ['showProgress']),
 
     emailErrors () {
@@ -66,7 +66,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('auth', ['updateEmail']),
+    ...mapActions('users', ['updateEmail']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {
@@ -113,8 +113,10 @@ export default {
     }
   },
 
-  mounted () {
-    this.email = this.user.email;
+  watch: {
+    user () {
+      this.email = this.user.email;
+    }
   }
 };
 </script>
