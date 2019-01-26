@@ -113,7 +113,7 @@
 
           <v-list-tile to="/users">
             <v-list-tile-content>
-              <v-list-tile-title>List</v-list-tile-title>
+              <v-list-tile-title>All Users</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon>fas fa-fw fa-users</v-icon>
@@ -122,7 +122,7 @@
 
           <v-list-tile to="/users/add">
             <v-list-tile-content>
-              <v-list-tile-title>Add</v-list-tile-title>
+              <v-list-tile-title>Create New User</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon>fas fa-fw fa-user-plus</v-icon>
