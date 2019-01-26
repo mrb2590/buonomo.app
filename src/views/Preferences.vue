@@ -8,14 +8,14 @@
           </v-card-title>
           <v-card-text>
             <v-layout wrap>
-              <v-flex xs12 sm6>
+              <v-flex xs12 sm4>
                 <v-switch
                   v-model="prefDarkMode"
                   label="Dark Mode"
                   color="primary"
                 ></v-switch>
               </v-flex>
-              <v-flex xs12 sm6>
+              <v-flex xs12 sm8>
                 <p class="option-description">Set the theme to dark or light mode.</p>
               </v-flex>
             </v-layout>

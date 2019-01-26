@@ -27,7 +27,10 @@
               sort-icon="fas fa-caret-up"
             >
               <template slot="items" slot-scope="props">
-                <tr @click="$router.push({ path: `/users/${props.item.id}` })">
+                <tr
+                  :class="{ 'primary--text': $route.params.id === props.item.id }"
+                  @click="$router.push({ path: `/users/${props.item.id}` })"
+                >
                   <td>{{ props.item.first_name }}</td>
                   <td>{{ props.item.last_name }}</td>
                   <td>{{ props.item.email }}</td>
