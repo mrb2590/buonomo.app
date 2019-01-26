@@ -2,7 +2,7 @@
   <v-container class="users-edit-view" grid-list-xl fill-height>
     <v-layout wrap>
       <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3>
-        <UserProfileOverview v-if="user" :user="user" :with-id="true"/>
+        <UserProfileOverview v-if="user" :user="user" :admin="true"/>
       </v-flex>
     </v-layout>
   </v-container>

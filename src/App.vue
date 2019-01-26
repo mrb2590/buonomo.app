@@ -9,7 +9,7 @@
       <v-list class="pb-0">
         <v-list-tile>
           <v-list-tile-avatar>
-            <v-icon color="primary">fas fa-fw fa-bold</v-icon>
+            <v-icon color="primary">fas fa-fw fa-bold fa-2x</v-icon>
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title

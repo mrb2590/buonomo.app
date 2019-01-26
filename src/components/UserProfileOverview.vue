@@ -6,7 +6,7 @@
     <v-card-text>
       <div v-if="user">
         <h1 class="display-1 mb-2 primary--text">{{ `${user.first_name} ${user.last_name}` }}</h1>
-        <p>@{{ user.slug }}</p>
+        <p>@{{ user.username }}</p>
         <p>{{ user.email }}</p>
         <p>Used {{ user.formatted_used_drive_bytes }} of {{ user.formatted_allocated_drive_bytes }} drive storage</p>
         <p>Member Since {{ user.created_at | moment }}</p>
@@ -16,7 +16,7 @@
           <span v-for="(role, index) in user.roles" :key="index">{{ role.display_name }} </span>
         </p>
         <p v-if="!user.roles || user.roles.length === 0">No Roles</p>
-        <p v-if="withId">{{ user.id }}</p>
+        <p v-if="admin">{{ user.id }}</p>
       </div>
     </v-card-text>
   </v-card>
@@ -30,9 +30,11 @@ export default {
 
   props: {
     user: {
+      type: Object,
       required: true
     },
-    'with-id': {
+
+    admin: {
       type: Boolean,
       required: false,
       default: false

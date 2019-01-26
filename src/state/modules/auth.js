@@ -220,7 +220,7 @@ export const actions = {
    * Update the user's profile.
    */
   async updateProfile ({ commit }, form) {
-    return axios.patch(`${apiUrl}/v1/users/${form.id}`, {
+    return axios.patch(`${apiUrl}/v1/users/${form.id}/profile`, {
       first_name: form.firstName,
       last_name: form.lastName
     })
@@ -234,7 +234,7 @@ export const actions = {
    * Update the user's email address.
    */
   async updateEmail ({ commit }, form) {
-    return axios.patch(`${apiUrl}/v1/users/${form.id}`, {
+    return axios.patch(`${apiUrl}/v1/users/${form.id}/email`, {
       email: form.email
     })
       .then(response => {
@@ -247,18 +247,22 @@ export const actions = {
    * Update the user's password.
    */
   async updatePassword ({ commit }, form) {
-    return axios.patch(`${apiUrl}/v1/users/${form.id}`, {
+    let data = {
       current_password: form.currentPassword,
       password: form.password,
       password_confirmation: form.passwordConfirmation
-    })
+    };
+    if (typeof form.currentPassword !== 'undefined') {
+      data.current_password = form.currentPassword;
+    }
+    return axios.patch(`${apiUrl}/v1/users/${form.id}/password`, data)
       .then(response => response.data.data);
   },
 
   /**
    * Update the user's avatar.
    */
-  async updateAvatar ({ commit }, form) {
+  async updateAvatar ({ commit, state }, form) {
     return axios.patch(`${apiUrl}/v1/users/${form.id}/avatar`, {
       style: form.style,
       accessories: form.accessories,

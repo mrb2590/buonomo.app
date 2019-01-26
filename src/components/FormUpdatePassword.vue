@@ -3,6 +3,7 @@
     <v-layout wrap>
       <v-flex xs12>
         <v-text-field
+          v-if="!admin"
           type="password"
           v-model="currentPassword"
           name="current_password"
@@ -74,12 +75,25 @@ export default {
     passwordConfirmation: ''
   }),
 
+  props: {
+    admin: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
+
   mixins: [validationMixin],
 
-  validations: {
-    currentPassword: { required },
-    password: { required, minLength: minLength(6) },
-    passwordConfirmation: { required, minLength: minLength(6), sameAs: sameAs('password') }
+  validations () {
+    let validations = {
+      password: { required, minLength: minLength(6) },
+      passwordConfirmation: { required, minLength: minLength(6), sameAs: sameAs('password') }
+    };
+    if (!this.admin) {
+      validations.currentPassword = { required };
+    }
+    return validations;
   },
 
   computed: {
@@ -102,6 +116,7 @@ export default {
     },
 
     passwordConfirmationErrors () {
+      if (this.admin) return;
       const errors = [];
       if (!this.$v.passwordConfirmation.$dirty) return errors;
       !this.$v.passwordConfirmation.required && errors.push('New password is required');
@@ -122,13 +137,16 @@ export default {
     },
 
     submit () {
-      this.SET_SHOW_PROGRESS(true);
-      return this.updatePassword({
+      let data = {
         id: this.user.id,
-        currentPassword: this.currentPassword,
         password: this.password,
         passwordConfirmation: this.passwordConfirmation
-      })
+      };
+      if (!this.admin) {
+        data.currentPassword = this.currentPassword;
+      }
+      this.SET_SHOW_PROGRESS(true);
+      return this.updatePassword(data)
         .then((user) => {
           this.clearForm();
           this.SET_SHOW_PROGRESS(false);
