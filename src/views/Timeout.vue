@@ -1,5 +1,5 @@
 <template>
-  <v-container class="timeout-view" fluid fill-height>
+  <v-container class="timeout-view" fluid fill-height grid-list-xl>
     <v-layout justify-center align-center>
       <v-flex shrink>
         Page timed out.

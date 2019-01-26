@@ -1,5 +1,5 @@
 <template>
-  <v-container class="drive-view" fluid fill-height>
+  <v-container class="drive-view" fluid fill-height grid-list-xl>
     <v-layout justify-center align-center>
       <v-flex shrink>
         Drive

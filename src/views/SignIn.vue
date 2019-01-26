@@ -1,5 +1,5 @@
 <template>
-  <v-container class="sign-in-view" fluid fill-height>
+  <v-container class="sign-in-view" fluid fill-height grid-list-xl>
     <v-layout justify-center align-center>
       <v-flex class="card-container">
         <v-card>

@@ -1,7 +1,7 @@
 <template>
   <div class="users-view">
     <router-view/>
-    <v-container grid-list-xl fluid fill-height>
+    <v-container fluid fill-height grid-list-xl>
       <v-layout wrap>
         <v-flex xs12>
           <v-card>

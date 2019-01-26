@@ -1,5 +1,5 @@
 <template>
-  <v-container class="404-view" fluid fill-height>
+  <v-container class="404-view" fluid fill-height grid-list-xl>
     <v-layout justify-center align-center>
       <v-flex shrink>
         404 Page not found.

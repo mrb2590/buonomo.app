@@ -1,5 +1,5 @@
 <template>
-  <v-container class="profile-view" grid-list-xl fill-height>
+  <v-container class="profile-view" fluid fill-height grid-list-xl>
     <v-layout wrap>
       <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3>
         <UserProfileOverview :user="user"/>

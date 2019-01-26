@@ -1,5 +1,5 @@
 <template>
-  <v-container class="preferences-view" grid-list-xl fill-height>
+  <v-container class="preferences-view" fluid fill-height grid-list-xl>
     <v-layout wraps>
       <v-flex>
         <v-card>

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="chat-view" fluid fill-height>
+  <v-container class="chat-view" fluid fill-height grid-list-xl>
     <v-layout justify-center align-center>
       <v-flex shrink>
         Chat

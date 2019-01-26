@@ -1,5 +1,5 @@
 <template>
-  <v-container class="unauthorized-view" fluid fill-height>
+  <v-container class="unauthorized-view" fluid fill-height grid-list-xl>
     <v-layout justify-center align-center>
       <v-flex shrink>
         You are unauthorized to view this page.

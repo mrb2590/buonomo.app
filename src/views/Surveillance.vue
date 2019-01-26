@@ -1,5 +1,5 @@
 <template>
-  <v-container class="surveillance-view" grid-list-xl fill-height fluid>
+  <v-container class="surveillance-view" fluid fill-height grid-list-xl>
     <v-layout wrap>
       <v-flex xs12 sm6>
         <v-card>
