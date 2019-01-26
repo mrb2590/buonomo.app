@@ -152,7 +152,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: 'Your password has been updated.',
+            text: 'Password has been updated.',
             class: 'success--text'
           });
         })
@@ -161,7 +161,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: processInvalidForm(error, 'Failed to update your password.'),
+            text: processInvalidForm(error, 'Failed to update password.'),
             class: 'error--text'
           });
         });

@@ -327,7 +327,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: 'Your avatar has been updated.',
+            text: 'Avatar has been updated.',
             class: 'success--text'
           });
         })
@@ -335,7 +335,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: processInvalidForm(error, 'Failed to update your avatar.'),
+            text: processInvalidForm(error, 'Failed to update avatar.'),
             class: 'error--text'
           });
         });
@@ -368,7 +368,7 @@ export default {
       .catch(error => {
         this.SET_SNACKBAR({
           show: true,
-          text: processInvalidForm(error, 'Failed to load avatar options.'),
+          text: processInvalidForm(error, 'Failed to avatar options.'),
           class: 'error--text'
         });
       });

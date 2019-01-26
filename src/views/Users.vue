@@ -28,8 +28,8 @@
             >
               <template slot="items" slot-scope="props">
                 <tr
-                  :class="{ 'primary--text': $route.params.username === props.item.username }"
-                  @click="$router.push({ path: `/users/${props.item.username}` })"
+                  :class="{ 'primary--text': $route.params.id === props.item.id }"
+                  @click="$router.push({ path: `/users/${props.item.id}` })"
                 >
                   <td>{{ props.item.first_name }}</td>
                   <td>{{ props.item.last_name }}</td>

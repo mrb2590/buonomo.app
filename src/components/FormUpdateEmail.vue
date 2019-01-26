@@ -84,7 +84,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: 'Your email has been updated.',
+            text: 'Email address has been updated.',
             class: 'success--text'
           });
         })
@@ -92,7 +92,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: processInvalidForm(error, 'Failed to update your email address.'),
+            text: processInvalidForm(error, 'Failed to update email address.'),
             class: 'error--text'
           });
         });

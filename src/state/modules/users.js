@@ -18,6 +18,7 @@ export const mutations = {
   SET_USER_PROFILE (state, data) {
     state.user.first_name = data.first_name;
     state.user.last_name = data.last_name;
+    state.user.username = data.username;
     state.user.updated_at = data.updated_at;
   },
 
@@ -86,7 +87,8 @@ export const actions = {
   async updateProfile ({ commit }, form) {
     return axios.patch(`${apiUrl}/v1/users/${form.id}/profile`, {
       first_name: form.firstName,
-      last_name: form.lastName
+      last_name: form.lastName,
+      username: form.username
     })
       .then(response => {
         commit('SET_USER_PROFILE', response.data.data);

@@ -2,14 +2,14 @@
   <v-container class="profile-view" fluid fill-height grid-list-xl>
     <v-layout wrap>
       <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3>
-        <UserProfileOverview :user="user"/>
+        <UserProfileOverview/>
       </v-flex>
       <v-flex xs12 sm6>
         <v-layout wrap>
           <v-flex xs12>
             <v-card>
               <v-card-title primary-title>
-                <h2 class="headline primary--text">Edit Your Avatar</h2>
+                <h2 class="headline primary--text">Edit Avatar</h2>
               </v-card-title>
               <v-card-text>
                 <FormUpdateAvatar/>
@@ -23,7 +23,7 @@
           <v-flex xs12>
             <v-card>
               <v-card-title primary-title>
-                <h2 class="headline primary--text">Edit Your Profile</h2>
+                <h2 class="headline primary--text">Edit Profile</h2>
               </v-card-title>
               <v-card-text>
                 <FormUpdateProfile/>
@@ -33,7 +33,7 @@
           <v-flex xs12>
             <v-card>
               <v-card-title primary-title>
-                <h2 class="headline primary--text">Update Your Email</h2>
+                <h2 class="headline primary--text">Update Email Address</h2>
               </v-card-title>
               <v-card-text>
                 <FormUpdateEmail/>
@@ -43,7 +43,7 @@
           <v-flex xs12>
             <v-card>
               <v-card-title primary-title>
-                <h2 class="headline primary--text">Update Your Password</h2>
+                <h2 class="headline primary--text">Update Password</h2>
               </v-card-title>
               <v-card-text>
                 <FormUpdatePassword/>

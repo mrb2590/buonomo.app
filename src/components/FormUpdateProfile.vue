@@ -129,7 +129,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: 'Your profile has been updated.',
+            text: 'Profile has been updated.',
             class: 'success--text'
           });
         })
@@ -137,7 +137,7 @@ export default {
           this.SET_SHOW_PROGRESS(false);
           this.SET_SNACKBAR({
             show: true,
-            text: processInvalidForm(error, 'Failed to update your profile.'),
+            text: processInvalidForm(error, 'Failed to update profile.'),
             class: 'error--text'
           });
         });
@@ -147,11 +147,12 @@ export default {
       this.$v.$reset();
       this.firstName = '';
       this.lastName = '';
+      this.username = '';
       this.formIsEmpty = true;
     },
 
     checkFormIsEmpty () {
-      if (this.firstName === '' && this.lastName === '') {
+      if (this.firstName === '' && this.lastName === '' && this.username === '') {
         this.formIsEmpty = true;
       } else {
         this.formIsEmpty = false;
