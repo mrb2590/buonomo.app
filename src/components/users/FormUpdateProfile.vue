@@ -63,7 +63,6 @@
           :items="allocatedDriveBytesOptions"
         ></v-select>
         <div v-if="admin">
-          <span class="title">Roles</span>
           <v-checkbox
           v-for="(role, index) in roles"
           :key="index"

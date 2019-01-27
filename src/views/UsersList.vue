@@ -5,27 +5,41 @@
         <v-flex xs12>
           <v-card>
             <v-card-title primary-title>
-              <h2 class="headline primary--text">Created Users</h2>
+              <h2 class="headline primary--text">New Users</h2>
             </v-card-title>
             <v-card-text>
               <v-sparkline
-                :value="userCreatedDates.values"
-                color="primary"
-                :smooth="true"
+                v-if="createdUserDates.labels.length"
+                :labels="createdUserDates.labels"
+                :value="createdUserDates.values"
                 :line-width="2"
-                :padding="8"
-                :radius="10"
                 stroke-linecap="round"
                 auto-draw
+                smooth
                 :height="50"
-              ></v-sparkline>
+              >
+              </v-sparkline>
             </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn-toggle v-model="userCreatedDatesRange" mandatory>
+                <v-btn flat value="day">
+                  Day
+                </v-btn>
+                <v-btn flat value="month">
+                  Month
+                </v-btn>
+                <v-btn flat value="year">
+                  Year
+                </v-btn>
+              </v-btn-toggle>
+            </v-card-actions>
           </v-card>
         </v-flex>
         <v-flex xs12>
           <v-card>
             <v-card-title>
-              <v-icon color="primary">fas fa-users fa-md fa-3x</v-icon>
+              <h2 class="headline primary--text">All Users</h2>
               <v-spacer></v-spacer>
               <v-text-field
                 v-model="search"
@@ -89,6 +103,7 @@ export default {
   },
 
   data: () => ({
+    userCreatedDatesRange: 'month',
     totalUsers: 0,
     listedUsers: [],
     loading: true,
@@ -102,42 +117,18 @@ export default {
       totalItems: 0
     },
     headers: [
-      {
-        text: 'First Name',
-        align: 'left',
-        value: 'first_name'
-      },
-      {
-        text: 'Last Name',
-        align: 'left',
-        value: 'last_name'
-      },
-      {
-        text: 'Email',
-        align: 'left',
-        value: 'email'
-      },
-      {
-        text: 'Username',
-        align: 'left',
-        value: 'username'
-      },
-      {
-        text: 'Member Since',
-        align: 'left',
-        value: 'created_at'
-      },
-      {
-        text: 'Used Storage',
-        align: 'left',
-        value: 'used_drive_bytes'
-      },
-      {
-        text: 'Allocated Storage',
-        align: 'left',
-        value: 'allocated_drive_bytes'
-      }
-    ]
+      { text: 'First Name', align: 'left', value: 'first_name' },
+      { text: 'Last Name', align: 'left', value: 'last_name' },
+      { text: 'Email', align: 'left', value: 'email' },
+      { text: 'Username', align: 'left', value: 'username' },
+      { text: 'Member Since', align: 'left', value: 'created_at' },
+      { text: 'Used Storage', align: 'left', value: 'used_drive_bytes' },
+      { text: 'Allocated Storage', align: 'left', value: 'allocated_drive_bytes' }
+    ],
+    createdUserDates: {
+      labels: [],
+      values: []
+    }
   }),
 
   computed: {
@@ -154,7 +145,11 @@ export default {
 
     search: debounce(function (e) {
       this.fetchUsers();
-    }, 500)
+    }, 500),
+
+    userCreatedDatesRange () {
+      this.fetchUserCreatedDates();
+    }
   },
 
   filters: {
@@ -187,11 +182,23 @@ export default {
           this.listedUsers = response.data.data;
           this.totalUsers = response.data.meta.total;
         });
+    },
+
+    fetchUserCreatedDates () {
+      this.fetchUsersCreatedDates(this.userCreatedDatesRange)
+        .then(response => {
+          this.createdUserDates.labels = [];
+          this.createdUserDates.values = [];
+          for (let i = 0; i < response.data.data.length; i++) {
+            this.createdUserDates.labels.push(response.data.data[i].created_at);
+            this.createdUserDates.values.push(response.data.data[i].total);
+          }
+        });
     }
   },
 
   mounted () {
-    this.fetchUsersCreatedDates();
+    this.fetchUserCreatedDates();
   }
 };
 </script>
@@ -200,6 +207,10 @@ export default {
 .users-table /deep/ .fa-caret-up {
   float: right;
   margin-left: 4px;
+}
+
+/deep/ svg > g {
+  font-size: 3px !important;
 }
 
 .users-table {

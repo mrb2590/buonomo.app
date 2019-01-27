@@ -116,9 +116,6 @@
           :items="allocatedDriveBytesOptions"
         ></v-select>
       </v-flex>
-      <v-flex xs12>
-        <span class="title">Roles</span>
-      </v-flex>
       <v-flex
         xs6
         v-for="(role, index) in roles"

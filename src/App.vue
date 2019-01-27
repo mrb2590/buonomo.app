@@ -116,7 +116,11 @@
               <v-list-tile-title>All Users</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-icon>fas fa-fw fa-users</v-icon>
+              <v-icon
+                :class="{ 'primary--text': $route.name === 'all-users'}"
+              >
+                fas fa-fw fa-users
+              </v-icon>
             </v-list-tile-action>
           </v-list-tile>
 
@@ -125,7 +129,11 @@
               <v-list-tile-title>Create New User</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-icon>fas fa-fw fa-user-plus</v-icon>
+              <v-icon
+                :class="{ 'primary--text': $route.name === 'create-users'}"
+              >
+                fas fa-fw fa-user-plus
+              </v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list-group>

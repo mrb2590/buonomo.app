@@ -4,11 +4,7 @@ import { processInvalidForm } from '@/functions';
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export const state = {
-  user: null,
-  userCreatedDates: {
-    labels: [],
-    values: []
-  }
+  user: null
 };
 
 export const getters = {
@@ -59,15 +55,6 @@ export const mutations = {
     state.user.roles = [];
     for (let i = 0; i < data.length; i++) {
       state.user.roles.push(data[i]);
-    }
-  },
-
-  SET_USER_CREATED_DATES (state, data) {
-    state.userCreatedDates.labels = [];
-    state.userCreatedDates.values = [];
-    for (let i = 0; i < data.length; i++) {
-      state.userCreatedDates.labels.push(data[i].created_at);
-      state.userCreatedDates.values.push(data[i].total);
     }
   }
 };
@@ -124,10 +111,15 @@ export const actions = {
   /**
    * Fetch all users paginated.
    */
-  async fetchUsersCreatedDates ({ commit }, params) {
-    return axios.get(`${apiUrl}/v1/users/aggregate/created`)
+  async fetchUsersCreatedDates ({ commit }, range) {
+    return axios.get(`${apiUrl}/v1/users/aggregate/created`, {
+      params: {
+        range: range
+      }
+    })
       .then(response => {
-        commit('SET_USER_CREATED_DATES', response.data.data);
+        return response;
+        // commit('SET_USER_CREATED_DATES', response.data.data);
       })
       .catch(error => {
         console.log(error);
