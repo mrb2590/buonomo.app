@@ -38,6 +38,30 @@
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
+        <v-select
+          v-if="admin"
+          v-model="verified"
+          name="verified"
+          label="Email Address Verified"
+          required
+          :error-messages="verifiedErrors"
+          @input="$v.verified.$touch()"
+          @blur="$v.verified.$touch()"
+          :disabled="showProgress"
+          :items="verifiedOptions"
+        ></v-select>
+        <v-select
+          v-if="admin"
+          v-model="allocatedDriveBytes"
+          name="allocatedDriveBytes"
+          label="Allocated Drive Storage"
+          required
+          :error-messages="allocatedDriveBytesErrors"
+          @input="$v.allocatedDriveBytes.$touch()"
+          @blur="$v.allocatedDriveBytes.$touch()"
+          :disabled="showProgress"
+          :items="allocatedDriveBytesOptions"
+        ></v-select>
       </v-flex>
       <v-flex xs12 text-xs-right>
         <v-btn
@@ -67,18 +91,50 @@ export default {
   name: 'FormUpdateProfile',
 
   data: () => ({
+    verifiedOptions: [
+      { text: 'Yes', value: true },
+      { text: 'No', value: false }
+    ],
+    allocatedDriveBytesOptions: [
+      { text: 'None', value: 0 },
+      { text: '1 GB', value: 1073741824 },
+      { text: '2 GB', value: 2147483648 },
+      { text: '5 GB', value: 5368709120 },
+      { text: '10 GB', value: 10737418240 },
+      { text: '25 GB', value: 26843545600 },
+      { text: '50 GB', value: 53687091200 },
+      { text: '100 GB', value: 107374182400 },
+      { text: '200 GB', value: 214748364800 }
+    ],
     formIsEmpty: false,
-    firstName: '',
-    lastName: '',
-    username: ''
+    firstName: null,
+    lastName: null,
+    username: null,
+    verified: null,
+    allocatedDriveBytes: null
   }),
+
+  props: {
+    admin: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
 
   mixins: [validationMixin],
 
-  validations: {
-    firstName: { required },
-    lastName: { required },
-    username: { required, usernameRegex }
+  validations () {
+    let validations = {
+      firstName: { required },
+      lastName: { required },
+      username: { required, usernameRegex }
+    };
+    if (this.admin) {
+      validations.verified = { required };
+      validations.allocatedDriveBytes = { required };
+    }
+    return validations;
   },
 
   computed: {
@@ -103,7 +159,22 @@ export default {
       const errors = [];
       if (!this.$v.username.$dirty) return errors;
       !this.$v.username.required && errors.push('Last name is required');
-      !this.$v.username.usernameRegex && errors.push('Username can only contain a-Z, 0-9, _, -, .');
+      !this.$v.username.usernameRegex &&
+        errors.push('Username can only contain letters, numbers, underscores, periods, and dashes');
+      return errors;
+    },
+
+    verifiedErrors () {
+      const errors = [];
+      if (!this.$v.verified.$dirty) return errors;
+      !this.$v.verified.required && errors.push('Email Address Verified is required');
+      return errors;
+    },
+
+    allocatedDriveBytesErrors () {
+      const errors = [];
+      if (!this.$v.allocatedDriveBytes.$dirty) return errors;
+      !this.$v.allocatedDriveBytes.required && errors.push('Allocated Drive Storage is required');
       return errors;
     }
   },
@@ -119,11 +190,13 @@ export default {
 
     submit () {
       this.SET_SHOW_PROGRESS(true);
-      return this.updateProfile({
+      this.updateProfile({
         id: this.user.id,
         firstName: this.firstName,
         lastName: this.lastName,
-        username: this.username
+        username: this.username,
+        verified: this.verified,
+        allocatedDriveBytes: this.allocatedDriveBytes
       })
         .then((user) => {
           this.SET_SHOW_PROGRESS(false);
@@ -145,14 +218,21 @@ export default {
 
     clearForm () {
       this.$v.$reset();
-      this.firstName = '';
-      this.lastName = '';
-      this.username = '';
+      this.firstName = null;
+      this.lastName = null;
+      this.username = null;
+      this.verified = null;
+      this.allocatedDriveBytes = null;
       this.formIsEmpty = true;
     },
 
     checkFormIsEmpty () {
-      if (this.firstName === '' && this.lastName === '' && this.username === '') {
+      if (this.firstName === null &&
+        this.lastName === null &&
+        this.username === null &&
+        this.verified === null &&
+        this.allocatedDriveBytes === null
+      ) {
         this.formIsEmpty = true;
       } else {
         this.formIsEmpty = false;
@@ -165,6 +245,8 @@ export default {
       this.firstName = this.user.first_name;
       this.lastName = this.user.last_name;
       this.username = this.user.username;
+      this.verified = !!this.user.email_verified_at;
+      this.allocatedDriveBytes = this.user.allocated_drive_bytes;
     }
   }
 };

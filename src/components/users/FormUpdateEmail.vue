@@ -43,7 +43,7 @@ export default {
 
   data: () => ({
     formIsEmpty: false,
-    email: ''
+    email: null
   }),
 
   mixins: [validationMixin],
@@ -100,12 +100,12 @@ export default {
 
     clearForm () {
       this.$v.$reset();
-      this.email = '';
+      this.email = null;
       this.formIsEmpty = true;
     },
 
     checkFormIsEmpty () {
-      if (this.email === '') {
+      if (this.email === null) {
         this.formIsEmpty = true;
       } else {
         this.formIsEmpty = false;

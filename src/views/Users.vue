@@ -1,6 +1,5 @@
 <template>
   <div class="users-view">
-    <router-view/>
     <v-container fluid fill-height grid-list-xl>
       <v-layout wrap>
         <v-flex xs12>
@@ -45,6 +44,7 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <router-view/>
   </div>
 </template>
 
@@ -77,7 +77,7 @@ export default {
     pagination: {
       descending: false,
       page: 1,
-      rowsPerPage: 10,
+      rowsPerPage: 5,
       sortBy: 'last_name',
       totalItems: 0
     },

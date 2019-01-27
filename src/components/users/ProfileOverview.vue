@@ -1,5 +1,5 @@
 <template>
-  <v-card class="user-profile-overview text-xs-center">
+  <v-card class="profile-overview text-xs-center">
     <v-card-title primary-title class="avatar-title">
       <img v-if="user" class="main-avatar" :src="user.avatar.url" alt="avatar">
     </v-card-title>
@@ -27,7 +27,7 @@ import moment from 'moment';
 import { mapState } from 'vuex';
 
 export default {
-  name: 'UserProfileOverview',
+  name: 'ProfileOverview',
 
   props: {
     admin: {
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-profile-overview {
+.profile-overview {
   margin-top: 80px;
 }
 

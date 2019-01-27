@@ -111,7 +111,7 @@
             <v-list-tile-title>User Management</v-list-tile-title>
           </v-list-tile>
 
-          <v-list-tile to="/users">
+          <v-list-tile to="/users/list">
             <v-list-tile-content>
               <v-list-tile-title>All Users</v-list-tile-title>
             </v-list-tile-content>
@@ -120,9 +120,9 @@
             </v-list-tile-action>
           </v-list-tile>
 
-          <v-list-tile to="/users/add">
+          <v-list-tile to="/users/create">
             <v-list-tile-content>
-              <v-list-tile-title>Create New User</v-list-tile-title>
+              <v-list-tile-title>Create Users</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon>fas fa-fw fa-user-plus</v-icon>

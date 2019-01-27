@@ -2,7 +2,7 @@
   <v-container class="users-edit-view" fluid fill-height grid-list-xl>
     <v-layout wrap>
       <v-flex xs12 sm8 offset-sm2 lg6 offset-lg3>
-        <UserProfileOverview :user="user" :admin="true"/>
+        <ProfileOverview :admin="true"/>
       </v-flex>
       <v-flex xs12 sm6>
         <v-layout wrap>
@@ -26,7 +26,7 @@
                 <h2 class="headline primary--text">Edit Profile</h2>
               </v-card-title>
               <v-card-text>
-                <FormUpdateProfile/>
+                <FormUpdateProfile :admin="true"/>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -59,11 +59,11 @@
 <script>
 import appConfig from '../app.config';
 import { mapState, mapActions } from 'vuex';
-import UserProfileOverview from '@/components/UserProfileOverview';
-import FormUpdateAvatar from '@/components/FormUpdateAvatar';
-import FormUpdateProfile from '@/components/FormUpdateProfile';
-import FormUpdateEmail from '@/components/FormUpdateEmail';
-import FormUpdatePassword from '@/components/FormUpdatePassword';
+import ProfileOverview from '@/components/users/ProfileOverview';
+import FormUpdateAvatar from '@/components/users/FormUpdateAvatar';
+import FormUpdateProfile from '@/components/users/FormUpdateProfile';
+import FormUpdateEmail from '@/components/users/FormUpdateEmail';
+import FormUpdatePassword from '@/components/users/FormUpdatePassword';
 
 export default {
   name: 'UsersEdit',
@@ -79,7 +79,7 @@ export default {
   },
 
   components: {
-    UserProfileOverview,
+    ProfileOverview,
     FormUpdateAvatar,
     FormUpdateProfile,
     FormUpdateEmail,

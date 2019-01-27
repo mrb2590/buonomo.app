@@ -87,8 +87,22 @@ export default [
     },
     children: [
       {
+        path: 'list',
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "users" */ '../views/Users')
+        )
+      },
+      {
+        path: 'create',
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "users" */ '../views/UsersCreate')
+        )
+      },
+      {
         path: ':id',
-        component: () => lazyLoadView(import(/* webpackChunkName: "profile" */ '../views/UsersEdit'))
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "profiluserse" */ '../views/UsersEdit')
+        )
       }
     ]
   },

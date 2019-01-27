@@ -70,9 +70,9 @@ export default {
 
   data: () => ({
     formIsEmpty: true,
-    currentPassword: '',
-    password: '',
-    passwordConfirmation: ''
+    currentPassword: null,
+    password: null,
+    passwordConfirmation: null
   }),
 
   props: {
@@ -116,7 +116,6 @@ export default {
     },
 
     passwordConfirmationErrors () {
-      if (this.admin) return;
       const errors = [];
       if (!this.$v.passwordConfirmation.$dirty) return errors;
       !this.$v.passwordConfirmation.required && errors.push('New password is required');
@@ -169,16 +168,16 @@ export default {
 
     clearForm () {
       this.$v.$reset();
-      this.currentPassword = '';
-      this.password = '';
-      this.passwordConfirmation = '';
+      this.currentPassword = null;
+      this.password = null;
+      this.passwordConfirmation = null;
       this.formIsEmpty = true;
     },
 
     checkFormIsEmpty () {
-      if (this.currentPassword === '' &&
-        this.password === '' &&
-        this.passwordConfirmation === ''
+      if (this.currentPassword === null &&
+        this.password === null &&
+        this.passwordConfirmation === null
       ) {
         this.formIsEmpty = true;
       } else {

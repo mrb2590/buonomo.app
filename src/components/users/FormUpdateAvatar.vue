@@ -167,19 +167,19 @@ export default {
 
   data: () => ({
     options: {},
-    avatarStyle: '',
-    accessoriesType: '',
-    clotheType: '',
-    clotheColor: '',
-    graphicType: '',
-    eyebrowType: '',
-    eyeType: '',
-    facialHairType: '',
-    facialHairColor: '',
-    hairColor: '',
-    mouthType: '',
-    skinColor: '',
-    topType: ''
+    avatarStyle: null,
+    accessoriesType: null,
+    clotheType: null,
+    clotheColor: null,
+    graphicType: null,
+    eyebrowType: null,
+    eyeType: null,
+    facialHairType: null,
+    facialHairColor: null,
+    hairColor: null,
+    mouthType: null,
+    skinColor: null,
+    topType: null
   }),
 
   mixins: [validationMixin],

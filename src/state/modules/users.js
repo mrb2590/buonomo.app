@@ -19,6 +19,9 @@ export const mutations = {
     state.user.first_name = data.first_name;
     state.user.last_name = data.last_name;
     state.user.username = data.username;
+    state.user.email_verified_at = data.email_verified_at;
+    state.user.allocated_drive_bytes = data.allocated_drive_bytes;
+    state.user.formatted_allocated_drive_bytes = data.formatted_allocated_drive_bytes;
     state.user.updated_at = data.updated_at;
   },
 
@@ -88,11 +91,12 @@ export const actions = {
     return axios.patch(`${apiUrl}/v1/users/${form.id}/profile`, {
       first_name: form.firstName,
       last_name: form.lastName,
-      username: form.username
+      username: form.username,
+      verified: form.verified,
+      allocated_drive_bytes: form.allocatedDriveBytes
     })
       .then(response => {
         commit('SET_USER_PROFILE', response.data.data);
-        return response.data.data;
       });
   },
 
@@ -105,7 +109,6 @@ export const actions = {
     })
       .then(response => {
         commit('SET_USER_EMAIL', response.data.data);
-        return response.data.data;
       });
   },
 
@@ -113,16 +116,11 @@ export const actions = {
    * Update the user's password.
    */
   async updatePassword ({ commit }, form) {
-    let data = {
+    return axios.patch(`${apiUrl}/v1/users/${form.id}/password`, {
       current_password: form.currentPassword,
       password: form.password,
       password_confirmation: form.passwordConfirmation
-    };
-    if (typeof form.currentPassword !== 'undefined') {
-      data.current_password = form.currentPassword;
-    }
-    return axios.patch(`${apiUrl}/v1/users/${form.id}/password`, data)
-      .then(response => response.data.data);
+    });
   },
 
   /**
@@ -146,7 +144,22 @@ export const actions = {
     })
       .then(response => {
         commit('SET_USER_AVATAR', response.data.data);
-        return response.data.data;
       });
+  },
+
+  /**
+   * Create a new user.
+   */
+  async createUser ({ commit }, form) {
+    return axios.post(`${apiUrl}/v1/users`, {
+      first_name: form.firstName,
+      last_name: form.lastName,
+      email: form.email,
+      username: form.username,
+      verified: form.verified,
+      allocated_drive_bytes: form.allocatedDriveBytes,
+      password: form.password,
+      password_confirmation: form.passwordConfirmation
+    });
   }
 };
