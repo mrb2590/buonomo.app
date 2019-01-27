@@ -48,6 +48,13 @@ export const mutations = {
     state.user.avatar.updated_at = data.updated_at;
     state.user.avatar.url = data.url;
     state.user.avatar.updated_at = data.updated_at;
+  },
+
+  SET_USER_ROLES (state, data) {
+    state.user.roles = [];
+    for (let i = 0; i < data.length; i++) {
+      state.user.roles.push(data[i]);
+    }
   }
 };
 
@@ -62,7 +69,7 @@ export const actions = {
   /**
    * Fetch the user object from cache or the API.
    */
-  async fetchUser ({ commit, state }, userId) {
+  async fetchUser ({ commit }, userId) {
     return axios.get(`${apiUrl}/v1/users/${userId}`, {
       params: {
         with_roles: 1,
@@ -85,6 +92,24 @@ export const actions = {
   },
 
   /**
+   * Fetch the roles.
+   */
+  async fetchRoles () {
+    return axios.get(`${apiUrl}/v1/roles`)
+      .then(response => {
+        return response.data.data;
+      })
+      .catch(error => {
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: 'Failed to fetch roles.',
+          class: 'error--text'
+        });
+      });
+  },
+
+  /**
    * Update the user's profile.
    */
   async updateProfile ({ commit }, form) {
@@ -93,10 +118,14 @@ export const actions = {
       last_name: form.lastName,
       username: form.username,
       verified: form.verified,
-      allocated_drive_bytes: form.allocatedDriveBytes
+      allocated_drive_bytes: form.allocatedDriveBytes,
+      roles: form.roles
     })
       .then(response => {
         commit('SET_USER_PROFILE', response.data.data);
+        if (response.data.data.roles) {
+          commit('SET_USER_ROLES', response.data.data.roles);
+        }
       });
   },
 
@@ -159,7 +188,8 @@ export const actions = {
       verified: form.verified,
       allocated_drive_bytes: form.allocatedDriveBytes,
       password: form.password,
-      password_confirmation: form.passwordConfirmation
+      password_confirmation: form.passwordConfirmation,
+      roles: form.roles
     });
   }
 };

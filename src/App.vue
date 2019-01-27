@@ -122,7 +122,7 @@
 
           <v-list-tile to="/users/create">
             <v-list-tile-content>
-              <v-list-tile-title>Create Users</v-list-tile-title>
+              <v-list-tile-title>Create New User</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon>fas fa-fw fa-user-plus</v-icon>

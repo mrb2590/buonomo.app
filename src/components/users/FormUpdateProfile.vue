@@ -62,6 +62,15 @@
           :disabled="showProgress"
           :items="allocatedDriveBytesOptions"
         ></v-select>
+        <div v-if="admin">
+          <span class="title">Roles</span>
+          <v-checkbox
+          v-for="(role, index) in roles"
+          :key="index"
+            :label="role.display_name"
+            v-model="userRoles[role.name]"
+          ></v-checkbox>
+        </div>
       </v-flex>
       <v-flex xs12 text-xs-right>
         <v-btn
@@ -106,6 +115,8 @@ export default {
       { text: '100 GB', value: 107374182400 },
       { text: '200 GB', value: 214748364800 }
     ],
+    roles: null,
+    userRoles: {},
     formIsEmpty: false,
     firstName: null,
     lastName: null,
@@ -180,7 +191,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('users', ['updateProfile']),
+    ...mapActions('users', ['updateProfile', 'fetchRoles']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {
@@ -190,13 +201,18 @@ export default {
 
     submit () {
       this.SET_SHOW_PROGRESS(true);
+      let setRoles = [];
+      for (let roleName in this.userRoles) {
+        if (this.userRoles[roleName]) setRoles.push(roleName);
+      }
       this.updateProfile({
         id: this.user.id,
         firstName: this.firstName,
         lastName: this.lastName,
         username: this.username,
         verified: this.verified,
-        allocatedDriveBytes: this.allocatedDriveBytes
+        allocatedDriveBytes: this.allocatedDriveBytes,
+        roles: setRoles
       })
         .then((user) => {
           this.SET_SHOW_PROGRESS(false);
@@ -247,7 +263,33 @@ export default {
       this.username = this.user.username;
       this.verified = !!this.user.email_verified_at;
       this.allocatedDriveBytes = this.user.allocated_drive_bytes;
+      if (this.roles) {
+        for (let i = 0; i < this.roles.length; i++) {
+          this.userRoles[this.roles[i].name] = false;
+          for (let j = 0; j < this.user.roles.length; j++) {
+            if (this.user.roles[j].name === this.roles[i].name) {
+              this.userRoles[this.roles[i].name] = true;
+            }
+          }
+        }
+      }
     }
+  },
+
+  mounted () {
+    this.fetchRoles().then(roles => {
+      this.roles = roles;
+      for (let i = 0; i < roles.length; i++) {
+        this.userRoles[roles[i].name] = false;
+        if (this.user) {
+          for (let j = 0; j < this.user.roles.length; j++) {
+            if (this.user.roles[j].name === roles[i].name) {
+              this.userRoles[roles[i].name] = true;
+            }
+          }
+        }
+      }
+    });
   }
 };
 </script>

@@ -116,6 +116,19 @@
           :items="allocatedDriveBytesOptions"
         ></v-select>
       </v-flex>
+      <v-flex xs12>
+        <span class="title">Roles</span>
+      </v-flex>
+      <v-flex
+        xs6
+        v-for="(role, index) in roles"
+        :key="index"
+      >
+        <v-checkbox
+          :label="role.display_name"
+          v-model="userRoles[role.name]"
+        ></v-checkbox>
+      </v-flex>
       <v-flex xs12 text-xs-right>
         <v-btn
           v-show="!formIsEmpty && !showProgress"
@@ -159,6 +172,8 @@ export default {
       { text: '100 GB', value: 107374182400 },
       { text: '200 GB', value: 214748364800 }
     ],
+    roles: null,
+    userRoles: {},
     formIsEmpty: true,
     firstName: '',
     lastName: '',
@@ -252,7 +267,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('users', ['createUser']),
+    ...mapActions('users', ['createUser', 'fetchRoles']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {
@@ -262,6 +277,10 @@ export default {
 
     submit () {
       this.SET_SHOW_PROGRESS(true);
+      let setRoles = [];
+      for (let roleName in this.userRoles) {
+        if (this.userRoles[roleName]) setRoles.push(roleName);
+      }
       return this.createUser({
         firstName: this.firstName,
         lastName: this.lastName,
@@ -270,7 +289,8 @@ export default {
         password: this.password,
         passwordConfirmation: this.passwordConfirmation,
         verified: this.verified,
-        allocatedDriveBytes: this.allocatedDriveBytes
+        allocatedDriveBytes: this.allocatedDriveBytes,
+        roles: setRoles
       })
         .then((user) => {
           this.SET_SHOW_PROGRESS(false);
@@ -318,6 +338,15 @@ export default {
         this.formIsEmpty = false;
       }
     }
+  },
+
+  mounted () {
+    this.fetchRoles().then(roles => {
+      this.roles = roles;
+      for (let i = 0; i < roles.length; i++) {
+        this.userRoles[roles[i].name] = false;
+      }
+    });
   }
 };
 </script>
