@@ -4,6 +4,26 @@
       <v-layout wrap>
         <v-flex xs12>
           <v-card>
+            <v-card-title primary-title>
+              <h2 class="headline primary--text">Created Users</h2>
+            </v-card-title>
+            <v-card-text>
+              <v-sparkline
+                :value="userCreatedDates.values"
+                color="primary"
+                :smooth="true"
+                :line-width="2"
+                :padding="8"
+                :radius="10"
+                stroke-linecap="round"
+                auto-draw
+                :height="50"
+              ></v-sparkline>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+        <v-flex xs12>
+          <v-card>
             <v-card-title>
               <v-icon color="primary">fas fa-users fa-md fa-3x</v-icon>
               <v-spacer></v-spacer>
@@ -121,7 +141,7 @@ export default {
   }),
 
   computed: {
-    ...mapState('users', ['users'])
+    ...mapState('users', ['users', 'userCreatedDates'])
   },
 
   watch: {
@@ -145,7 +165,7 @@ export default {
 
   methods: {
     ...mapMutations('app', ['SET_SNACKBAR']),
-    ...mapActions('users', ['fetchUsersPaginated']),
+    ...mapActions('users', ['fetchUsersPaginated', 'fetchUsersCreatedDates']),
 
     fetchUsers () {
       this.loading = true;
@@ -168,6 +188,10 @@ export default {
           this.totalUsers = response.data.meta.total;
         });
     }
+  },
+
+  mounted () {
+    this.fetchUsersCreatedDates();
   }
 };
 </script>
