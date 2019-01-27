@@ -70,9 +70,7 @@ export default [
   {
     path: '/users',
     name: 'users',
-    component: () => lazyLoadView(import(
-      /* webpackChunkName: "users" */ '../views/Users'
-    )),
+    component: () => lazyLoadView(import(/* webpackChunkName: "users" */ '../views/Users')),
     meta: {
       displayName: 'Users',
       authRequired: true
@@ -81,28 +79,35 @@ export default [
       if (!store.getters['auth/isUserManager']) {
         next({ name: 'unauthorized' });
       }
-
-      // Navigate back to previous page, or home as a fallback
       next();
     },
     children: [
       {
         path: 'list',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "users" */ '../views/Users')
-        )
+          import(/* webpackChunkName: "users" */ '../views/UsersList')
+        ),
+        meta: {
+          displayName: 'All Users'
+        }
       },
       {
         path: 'create',
         component: () => lazyLoadView(
           import(/* webpackChunkName: "users" */ '../views/UsersCreate')
-        )
+        ),
+        meta: {
+          displayName: 'Create New User'
+        }
       },
       {
         path: ':id',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "profiluserse" */ '../views/UsersEdit')
-        )
+          import(/* webpackChunkName: "users" */ '../views/UsersEdit')
+        ),
+        meta: {
+          displayName: 'Edit User'
+        }
       }
     ]
   },

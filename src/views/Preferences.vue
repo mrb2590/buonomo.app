@@ -4,7 +4,7 @@
       <v-flex>
         <v-card>
           <v-card-title primary-title>
-            <h2 class="headline primary--text">Update Your Preferences</h2>
+            <h2 class="headline primary--text">App Preferences</h2>
           </v-card-title>
           <v-card-text>
             <v-layout wrap>

@@ -143,7 +143,7 @@
 
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Buonomo</v-toolbar-title>
+      <v-toolbar-title>{{ $route.meta.displayName }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn to="/signin" color="primary" v-if="!signedIn">Sign in</v-btn>
       <v-btn to="/signout" color="primary" v-if="signedIn">Sign out</v-btn>
@@ -162,7 +162,7 @@
     </v-progress-linear>
 
     <v-footer app fixed class="footer-text">
-      <span>&copy; 2017</span>
+      <span>&copy; {{ (new Date).getFullYear() }}</span>
     </v-footer>
 
     <v-snackbar

@@ -159,7 +159,7 @@ export default {
       { text: '100 GB', value: 107374182400 },
       { text: '200 GB', value: 214748364800 }
     ],
-    formIsEmpty: false,
+    formIsEmpty: true,
     firstName: '',
     lastName: '',
     email: '',
