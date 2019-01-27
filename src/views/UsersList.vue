@@ -51,9 +51,7 @@
 
 <script>
 import appConfig from '@/app.config';
-import { mapState, mapMutations } from 'vuex';
-import axios from 'axios';
-import { processInvalidForm } from '@/functions';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import moment from 'moment';
 import debounce from 'lodash.debounce';
 
@@ -129,13 +127,13 @@ export default {
   watch: {
     pagination: {
       handler () {
-        this.getUsersPaginated();
+        this.fetchUsers();
       },
       deep: true
     },
 
     search: debounce(function (e) {
-      this.getUsersPaginated();
+      this.fetchUsers();
     }, 500)
   },
 
@@ -147,8 +145,9 @@ export default {
 
   methods: {
     ...mapMutations('app', ['SET_SNACKBAR']),
+    ...mapActions('users', ['fetchUsersPaginated']),
 
-    async getUsersPaginated () {
+    fetchUsers () {
       this.loading = true;
       const { sortBy, descending, page, rowsPerPage } = this.pagination;
       const params = {
@@ -162,20 +161,11 @@ export default {
       if (this.search) {
         params.search = this.search;
       }
-      return axios.get(`${process.env.VUE_APP_API_URL}/v1/users`, { params: params })
-        .then(res => {
+      this.fetchUsersPaginated(params)
+        .then(response => {
           this.loading = false;
-          this.listedUsers = res.data.data;
-          this.totalUsers = res.data.meta.total;
-          return res;
-        })
-        .catch(error => {
-          this.loading = false;
-          this.SET_SNACKBAR({
-            show: true,
-            text: processInvalidForm(error),
-            class: 'error--text'
-          });
+          this.listedUsers = response.data.data;
+          this.totalUsers = response.data.meta.total;
         });
     }
   }

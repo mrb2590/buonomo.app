@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { processInvalidForm } from '@/functions';
 
 const apiUrl = process.env.VUE_APP_API_URL;
 
@@ -92,6 +93,22 @@ export const actions = {
   },
 
   /**
+   * Fetch all users paginated.
+   */
+  async fetchUsersPaginated ({ commit }, params) {
+    return axios.get(`${apiUrl}/v1/users`, { params: params })
+      .then(response => response)
+      .catch(error => {
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: processInvalidForm(error),
+          class: 'error--text'
+        });
+      });
+  },
+
+  /**
    * Fetch the roles.
    */
   async fetchRoles () {
@@ -155,7 +172,7 @@ export const actions = {
   /**
    * Update the user's avatar.
    */
-  async updateAvatar ({ commit, state }, form) {
+  async updateAvatar ({ commit }, form) {
     return axios.patch(`${apiUrl}/v1/users/${form.id}/avatar`, {
       avatar_style: form.avatarStyle,
       accessories_type: form.accessoriesType,
