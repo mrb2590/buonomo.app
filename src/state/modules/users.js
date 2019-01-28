@@ -102,10 +102,6 @@ export const mutations = {
 
   SET_USERS_LIST_OPTIONS (state, options) {
     state.usersList.options = { ...options };
-  },
-
-  SET_USERS_LIST_SEARCH (state, search) {
-    state.usersList.search = search;
   }
 };
 
