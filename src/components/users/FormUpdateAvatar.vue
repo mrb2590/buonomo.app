@@ -1,7 +1,7 @@
 <template>
   <v-form novalidate @submit.prevent="validate">
     <v-layout wrap>
-      <v-flex xs12>
+      <v-flex xs12 v-if="avatarOptions">
         <v-select
           v-model="avatarStyle"
           name="avatarStyle"
@@ -11,7 +11,7 @@
           @input="$v.avatarStyle.$touch()"
           @blur="$v.avatarStyle.$touch()"
           :disabled="showProgress"
-          :items="options.avatarStyles"
+          :items="avatarOptions.avatarStyles"
         ></v-select>
         <v-select
           v-model="accessoriesType"
@@ -22,7 +22,7 @@
           @input="$v.accessoriesType.$touch()"
           @blur="$v.accessoriesType.$touch()"
           :disabled="showProgress"
-          :items="options.accessoriesTypes"
+          :items="avatarOptions.accessoriesTypes"
         ></v-select>
         <v-select
           v-model="clotheType"
@@ -33,7 +33,7 @@
           @input="$v.clotheType.$touch()"
           @blur="$v.clotheType.$touch()"
           :disabled="showProgress"
-          :items="options.clotheTypes"
+          :items="avatarOptions.clotheTypes"
         ></v-select>
         <v-select
           v-model="clotheColor"
@@ -44,7 +44,7 @@
           @input="$v.clotheColor.$touch()"
           @blur="$v.clotheColor.$touch()"
           :disabled="showProgress"
-          :items="options.clotheColors"
+          :items="avatarOptions.clotheColors"
         ></v-select>
         <v-select
           v-model="graphicType"
@@ -55,7 +55,7 @@
           @input="$v.graphicType.$touch()"
           @blur="$v.graphicType.$touch()"
           :disabled="showProgress"
-          :items="options.graphicTypes"
+          :items="avatarOptions.graphicTypes"
         ></v-select>
         <v-select
           v-model="eyebrowType"
@@ -66,7 +66,7 @@
           @input="$v.eyebrowType.$touch()"
           @blur="$v.eyebrowType.$touch()"
           :disabled="showProgress"
-          :items="options.eyebrowTypes"
+          :items="avatarOptions.eyebrowTypes"
         ></v-select>
         <v-select
           v-model="eyeType"
@@ -77,7 +77,7 @@
           @input="$v.eyeType.$touch()"
           @blur="$v.eyeType.$touch()"
           :disabled="showProgress"
-          :items="options.eyeTypes"
+          :items="avatarOptions.eyeTypes"
         ></v-select>
         <v-select
           v-model="facialHairType"
@@ -88,7 +88,7 @@
           @input="$v.facialHairType.$touch()"
           @blur="$v.facialHairType.$touch()"
           :disabled="showProgress"
-          :items="options.facialHairTypes"
+          :items="avatarOptions.facialHairTypes"
         ></v-select>
         <v-select
           v-model="facialHairColor"
@@ -99,7 +99,7 @@
           @input="$v.facialHairColor.$touch()"
           @blur="$v.facialHairColor.$touch()"
           :disabled="showProgress"
-          :items="options.facialHairColors"
+          :items="avatarOptions.facialHairColors"
         ></v-select>
         <v-select
           v-model="hairColor"
@@ -110,7 +110,7 @@
           @input="$v.hairColor.$touch()"
           @blur="$v.hairColor.$touch()"
           :disabled="showProgress"
-          :items="options.hairColors"
+          :items="avatarOptions.hairColors"
         ></v-select>
         <v-select
           v-model="mouthType"
@@ -121,7 +121,7 @@
           @input="$v.mouthType.$touch()"
           @blur="$v.mouthType.$touch()"
           :disabled="showProgress"
-          :items="options.mouthTypes"
+          :items="avatarOptions.mouthTypes"
         ></v-select>
         <v-select
           v-model="skinColor"
@@ -132,7 +132,7 @@
           @input="$v.skinColor.$touch()"
           @blur="$v.skinColor.$touch()"
           :disabled="showProgress"
-          :items="options.skinColors"
+          :items="avatarOptions.skinColors"
         ></v-select>
         <v-select
           v-model="topType"
@@ -143,7 +143,7 @@
           @input="$v.topType.$touch()"
           @blur="$v.topType.$touch()"
           :disabled="showProgress"
-          :items="options.topTypes"
+          :items="avatarOptions.topTypes"
         ></v-select>
       </v-flex>
       <v-flex xs12 text-xs-right>
@@ -156,17 +156,14 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
-import { processInvalidForm } from '@/functions';
 
 export default {
   name: 'FormUpdateEmail',
 
   data: () => ({
-    options: {},
     avatarStyle: null,
     accessoriesType: null,
     clotheType: null,
@@ -201,7 +198,7 @@ export default {
   },
 
   computed: {
-    ...mapState('users', ['user']),
+    ...mapState('users', ['user', 'avatarOptions']),
     ...mapState('app', ['showProgress']),
 
     avatarStyleErrors () {
@@ -297,7 +294,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('users', ['updateAvatar']),
+    ...mapActions('users', ['updateAvatar', 'fetchAvatarOptions']),
     ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
 
     validate () {
@@ -322,23 +319,7 @@ export default {
         mouthType: this.mouthType,
         skinColor: this.skinColor,
         topType: this.topType
-      })
-        .then((user) => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: 'Avatar has been updated.',
-            class: 'success--text'
-          });
-        })
-        .catch(error => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: processInvalidForm(error, 'Failed to update avatar.'),
-            class: 'error--text'
-          });
-        });
+      });
     }
   },
 
@@ -361,17 +342,9 @@ export default {
   },
 
   mounted () {
-    axios.get(`${process.env.VUE_APP_API_URL}/v1/avatars/options`)
-      .then(res => {
-        this.options = res.data;
-      })
-      .catch(error => {
-        this.SET_SNACKBAR({
-          show: true,
-          text: processInvalidForm(error, 'Failed to avatar options.'),
-          class: 'error--text'
-        });
-      });
+    if (!this.avatarOptions) {
+      this.fetchAvatarOptions();
+    }
   }
 };
 </script>

@@ -4,7 +4,24 @@ import { processInvalidForm } from '@/functions';
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export const state = {
-  user: null
+  user: null,
+  avatarOptions: null,
+  roles: null,
+  userCreatedDates: {
+    range: 'month',
+    labels: [],
+    values: []
+  },
+  usersList: {
+    data: null,
+    options: {
+      descending: false,
+      page: 1,
+      rowsPerPage: 10,
+      sortBy: 'last_name',
+      search: null
+    }
+  }
 };
 
 export const getters = {
@@ -31,24 +48,24 @@ export const mutations = {
     state.user.updated_at = data.updated_at;
   },
 
-  SET_USER_AVATAR (state, data) {
-    state.user.avatar.avatar_style = data.avatar_style;
-    state.user.avatar.accessories_type = data.accessories_type;
-    state.user.avatar.clothe_type = data.clothe_type;
-    state.user.avatar.clothe_color = data.clothe_color;
-    state.user.avatar.graphic_type = data.graphic_type;
-    state.user.avatar.eyebrow_type = data.eyebrow_type;
-    state.user.avatar.eye_type = data.eye_type;
-    state.user.avatar.facial_hair_type = data.facial_hair_type;
-    state.user.avatar.facial_hair_color = data.facial_hair_color;
-    state.user.avatar.hair_color = data.hair_color;
-    state.user.avatar.mouth_type = data.mouth_type;
-    state.user.avatar.skin_color = data.skin_color;
-    state.user.avatar.top_type = data.top_type;
-    state.user.avatar.created_at = data.created_at;
-    state.user.avatar.updated_at = data.updated_at;
-    state.user.avatar.url = data.url;
-    state.user.avatar.updated_at = data.updated_at;
+  SET_USER_AVATAR (state, avatar) {
+    state.user.avatar.avatar_style = avatar.avatar_style;
+    state.user.avatar.accessories_type = avatar.accessories_type;
+    state.user.avatar.clothe_type = avatar.clothe_type;
+    state.user.avatar.clothe_color = avatar.clothe_color;
+    state.user.avatar.graphic_type = avatar.graphic_type;
+    state.user.avatar.eyebrow_type = avatar.eyebrow_type;
+    state.user.avatar.eye_type = avatar.eye_type;
+    state.user.avatar.facial_hair_type = avatar.facial_hair_type;
+    state.user.avatar.facial_hair_color = avatar.facial_hair_color;
+    state.user.avatar.hair_color = avatar.hair_color;
+    state.user.avatar.mouth_type = avatar.mouth_type;
+    state.user.avatar.skin_color = avatar.skin_color;
+    state.user.avatar.top_type = avatar.top_type;
+    state.user.avatar.created_at = avatar.created_at;
+    state.user.avatar.updated_at = avatar.updated_at;
+    state.user.avatar.url = avatar.url;
+    state.user.avatar.updated_at = avatar.updated_at;
   },
 
   SET_USER_ROLES (state, data) {
@@ -56,6 +73,39 @@ export const mutations = {
     for (let i = 0; i < data.length; i++) {
       state.user.roles.push(data[i]);
     }
+  },
+
+  SET_ROLES (state, roles) {
+    state.roles = roles;
+  },
+
+  SET_AVATAR_OPTIONS (state, avatarOptions) {
+    state.avatarOptions = avatarOptions;
+  },
+
+  SET_USER_CREATED_DATES_RANGE (state, range) {
+    state.userCreatedDates.range = range;
+  },
+
+  SET_USER_CREATED_DATES (state, data) {
+    state.userCreatedDates.labels = [];
+    state.userCreatedDates.values = [];
+    for (let i = 0; i < data.length; i++) {
+      state.userCreatedDates.labels.push(data[i].created_at);
+      state.userCreatedDates.values.push(data[i].total);
+    }
+  },
+
+  SET_USERS_LIST_DATA (state, usersList) {
+    state.usersList.data = usersList;
+  },
+
+  SET_USERS_LIST_OPTIONS (state, options) {
+    state.usersList.options = { ...options };
+  },
+
+  SET_USERS_LIST_SEARCH (state, search) {
+    state.usersList.search = search;
   }
 };
 
@@ -93,11 +143,25 @@ export const actions = {
   },
 
   /**
-   * Fetch all users paginated.
+   * Fetch users paginated.
    */
-  async fetchUsersPaginated ({ commit }, params) {
+  async fetchUsersPaginated ({ commit, state }) {
+    const params = {
+      page: state.usersList.options.page,
+      limit: state.usersList.options.rowsPerPage
+    };
+    if (state.usersList.options.descending !== null) {
+      params.sort = state.usersList.options.descending ? 'desc' : 'asc';
+      params.sortby = state.usersList.options.sortBy;
+    }
+    if (state.usersList.options.search) {
+      params.search = state.usersList.options.search;
+    }
     return axios.get(`${apiUrl}/v1/users`, { params: params })
-      .then(response => response)
+      .then(response => {
+        commit('SET_USERS_LIST_DATA', response.data);
+        return response;
+      })
       .catch(error => {
         console.log(error);
         this.commit('app/SET_SNACKBAR', {
@@ -109,17 +173,17 @@ export const actions = {
   },
 
   /**
-   * Fetch all users paginated.
+   * Fetch user created dates.
    */
-  async fetchUsersCreatedDates ({ commit }, range) {
+  async fetchUsersCreatedDates ({ commit, state }) {
     return axios.get(`${apiUrl}/v1/users/aggregate/created`, {
       params: {
-        range: range
+        range: state.userCreatedDates.range
       }
     })
       .then(response => {
+        commit('SET_USER_CREATED_DATES', response.data.data);
         return response;
-        // commit('SET_USER_CREATED_DATES', response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -134,9 +198,10 @@ export const actions = {
   /**
    * Fetch the roles.
    */
-  async fetchRoles () {
+  async fetchRoles ({ commit }) {
     return axios.get(`${apiUrl}/v1/roles`)
       .then(response => {
+        commit('SET_ROLES', response.data.data);
         return response.data.data;
       })
       .catch(error => {
@@ -150,9 +215,29 @@ export const actions = {
   },
 
   /**
+   * Fetch the avatar options.
+   */
+  async fetchAvatarOptions ({ commit }) {
+    return axios.get(`${apiUrl}/v1/avatars/options`)
+      .then(response => {
+        commit('SET_AVATAR_OPTIONS', response.data);
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: processInvalidForm(error, 'Failed to avatar options.'),
+          class: 'error--text'
+        });
+      });
+  },
+
+  /**
    * Update the user's profile.
    */
   async updateProfile ({ commit }, form) {
+    this.commit('app/SET_SHOW_PROGRESS', true);
     return axios.patch(`${apiUrl}/v1/users/${form.id}/profile`, {
       first_name: form.firstName,
       last_name: form.lastName,
@@ -162,10 +247,25 @@ export const actions = {
       roles: form.roles
     })
       .then(response => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
         commit('SET_USER_PROFILE', response.data.data);
         if (response.data.data.roles) {
           commit('SET_USER_ROLES', response.data.data.roles);
         }
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: 'Profile has been updated.',
+          class: 'success--text'
+        });
+      })
+      .catch(error => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: processInvalidForm(error, 'Failed to update profile.'),
+          class: 'error--text'
+        });
       });
   },
 
@@ -173,11 +273,27 @@ export const actions = {
    * Update the user's email address.
    */
   async updateEmail ({ commit }, form) {
+    this.commit('app/SET_SHOW_PROGRESS', true);
     return axios.patch(`${apiUrl}/v1/users/${form.id}/email`, {
       email: form.email
     })
       .then(response => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
         commit('SET_USER_EMAIL', response.data.data);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: 'Email address has been updated.',
+          class: 'success--text'
+        });
+      })
+      .catch(error => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: processInvalidForm(error, 'Failed to update email address.'),
+          class: 'error--text'
+        });
       });
   },
 
@@ -185,17 +301,36 @@ export const actions = {
    * Update the user's password.
    */
   async updatePassword ({ commit }, form) {
+    this.commit('app/SET_SHOW_PROGRESS', true);
     return axios.patch(`${apiUrl}/v1/users/${form.id}/password`, {
       current_password: form.currentPassword,
       password: form.password,
       password_confirmation: form.passwordConfirmation
-    });
+    })
+      .then((user) => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: 'Password has been updated.',
+          class: 'success--text'
+        });
+      })
+      .catch(error => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: processInvalidForm(error, 'Failed to update password.'),
+          class: 'error--text'
+        });
+      });
   },
 
   /**
    * Update the user's avatar.
    */
   async updateAvatar ({ commit }, form) {
+    this.commit('app/SET_SHOW_PROGRESS', true);
     return axios.patch(`${apiUrl}/v1/users/${form.id}/avatar`, {
       avatar_style: form.avatarStyle,
       accessories_type: form.accessoriesType,
@@ -212,7 +347,22 @@ export const actions = {
       top_type: form.topType
     })
       .then(response => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
         commit('SET_USER_AVATAR', response.data.data);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: 'Avatar has been updated.',
+          class: 'success--text'
+        });
+      })
+      .catch(error => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: processInvalidForm(error, 'Failed to update avatar.'),
+          class: 'error--text'
+        });
       });
   },
 
@@ -220,7 +370,8 @@ export const actions = {
    * Create a new user.
    */
   async createUser ({ commit }, form) {
-    return axios.post(`${apiUrl}/v1/users`, {
+    this.commit('app/SET_SHOW_PROGRESS', true);
+    return axios.post(`${apiUrl}/v1/udsers`, {
       first_name: form.firstName,
       last_name: form.lastName,
       email: form.email,
@@ -230,6 +381,23 @@ export const actions = {
       password: form.password,
       password_confirmation: form.passwordConfirmation,
       roles: form.roles
-    });
+    })
+      .then(response => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: 'User has been created.',
+          class: 'success--text'
+        });
+      })
+      .catch(error => {
+        this.commit('app/SET_SHOW_PROGRESS', false);
+        console.log(error);
+        this.commit('app/SET_SNACKBAR', {
+          show: true,
+          text: processInvalidForm(error, 'Failed to create new user.'),
+          class: 'error--text'
+        });
+      });
   }
 };

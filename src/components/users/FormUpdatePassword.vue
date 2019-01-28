@@ -63,7 +63,6 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, sameAs, minLength } from 'vuelidate/lib/validators';
-import { processInvalidForm } from '@/functions';
 
 export default {
   name: 'FormUpdatePassword',
@@ -144,26 +143,9 @@ export default {
       if (!this.admin) {
         data.currentPassword = this.currentPassword;
       }
-      this.SET_SHOW_PROGRESS(true);
-      return this.updatePassword(data)
-        .then((user) => {
-          this.clearForm();
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: 'Password has been updated.',
-            class: 'success--text'
-          });
-        })
-        .catch(error => {
-          this.clearForm();
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: processInvalidForm(error, 'Failed to update password.'),
-            class: 'error--text'
-          });
-        });
+      this.updatePassword(data).then(() => {
+        this.clearForm();
+      });
     },
 
     clearForm () {

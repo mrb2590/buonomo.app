@@ -9,9 +9,9 @@
             </v-card-title>
             <v-card-text>
               <v-sparkline
-                v-if="createdUserDates.labels.length"
-                :labels="createdUserDates.labels"
-                :value="createdUserDates.values"
+                v-if="userCreatedDates.labels.length"
+                :labels="userCreatedDates.labels"
+                :value="userCreatedDates.values"
                 :line-width="2"
                 stroke-linecap="round"
                 auto-draw
@@ -51,10 +51,11 @@
               ></v-text-field>
             </v-card-title>
             <v-data-table
+              v-if="usersList.data"
               :headers="headers"
-              :items="listedUsers"
+              :items="usersList.data.data"
               :pagination.sync="pagination"
-              :total-items="totalUsers"
+              :total-items="usersList.data.meta.total"
               :loading="loading"
               class="elevation-1 users-table"
               sort-icon="fas fa-caret-up"
@@ -103,19 +104,11 @@ export default {
   },
 
   data: () => ({
-    userCreatedDatesRange: 'month',
-    totalUsers: 0,
-    listedUsers: [],
+    userCreatedDatesRange: null,
     loading: true,
     search: '',
     rowsPerPageItems: [5, 10, 25, 50, 100, { text: 'All', value: -1 }],
-    pagination: {
-      descending: false,
-      page: 1,
-      rowsPerPage: 10,
-      sortBy: 'last_name',
-      totalItems: 0
-    },
+    pagination: null,
     headers: [
       { text: 'First Name', align: 'left', value: 'first_name' },
       { text: 'Last Name', align: 'left', value: 'last_name' },
@@ -124,15 +117,11 @@ export default {
       { text: 'Member Since', align: 'left', value: 'created_at' },
       { text: 'Used Storage', align: 'left', value: 'used_drive_bytes' },
       { text: 'Allocated Storage', align: 'left', value: 'allocated_drive_bytes' }
-    ],
-    createdUserDates: {
-      labels: [],
-      values: []
-    }
+    ]
   }),
 
   computed: {
-    ...mapState('users', ['users', 'userCreatedDates'])
+    ...mapState('users', ['users', 'userCreatedDates', 'usersList'])
   },
 
   watch: {
@@ -148,7 +137,8 @@ export default {
     }, 500),
 
     userCreatedDatesRange () {
-      this.fetchUserCreatedDates();
+      this.SET_USER_CREATED_DATES_RANGE(this.userCreatedDatesRange);
+      this.fetchUsersCreatedDates();
     }
   },
 
@@ -160,45 +150,27 @@ export default {
 
   methods: {
     ...mapMutations('app', ['SET_SNACKBAR']),
+    ...mapMutations('users', ['SET_USER_CREATED_DATES_RANGE', 'SET_USERS_LIST_OPTIONS']),
     ...mapActions('users', ['fetchUsersPaginated', 'fetchUsersCreatedDates']),
 
     fetchUsers () {
       this.loading = true;
-      const { sortBy, descending, page, rowsPerPage } = this.pagination;
-      const params = {
-        page: page,
-        limit: rowsPerPage
-      };
-      if (descending !== null) {
-        params.sort = descending ? 'desc' : 'asc';
-        params.sortby = sortBy;
-      }
-      if (this.search) {
-        params.search = this.search;
-      }
-      this.fetchUsersPaginated(params)
+      this.SET_USERS_LIST_OPTIONS({
+        ...this.pagination,
+        search: this.search
+      });
+      this.fetchUsersPaginated()
         .then(response => {
           this.loading = false;
-          this.listedUsers = response.data.data;
-          this.totalUsers = response.data.meta.total;
-        });
-    },
-
-    fetchUserCreatedDates () {
-      this.fetchUsersCreatedDates(this.userCreatedDatesRange)
-        .then(response => {
-          this.createdUserDates.labels = [];
-          this.createdUserDates.values = [];
-          for (let i = 0; i < response.data.data.length; i++) {
-            this.createdUserDates.labels.push(response.data.data[i].created_at);
-            this.createdUserDates.values.push(response.data.data[i].total);
-          }
         });
     }
   },
 
-  mounted () {
-    this.fetchUserCreatedDates();
+  created () {
+    // todo: fix loading twice on initial load
+    this.userCreatedDatesRange = this.userCreatedDates.range;
+    this.pagination = this.usersList.options;
+    this.search = this.usersList.options.search;
   }
 };
 </script>

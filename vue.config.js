@@ -6,7 +6,7 @@ module.exports = {
     // it can be accessed in index.html to inject the correct title.
     name: appConfig.title
   },
-  baseUrl: process.env.BASE_URL,
+  publicPath: process.env.BASE_URL,
   css: {
     sourceMap: true
   },

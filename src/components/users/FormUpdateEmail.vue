@@ -36,7 +36,6 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
-import { processInvalidForm } from '@/functions';
 
 export default {
   name: 'FormUpdateEmail',
@@ -75,27 +74,10 @@ export default {
     },
 
     submit () {
-      this.SET_SHOW_PROGRESS(true);
-      return this.updateEmail({
+      this.updateEmail({
         id: this.user.id,
         email: this.email
-      })
-        .then((user) => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: 'Email address has been updated.',
-            class: 'success--text'
-          });
-        })
-        .catch(error => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: processInvalidForm(error, 'Failed to update email address.'),
-            class: 'error--text'
-          });
-        });
+      });
     },
 
     clearForm () {

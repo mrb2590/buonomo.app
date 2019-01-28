@@ -146,7 +146,6 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, email, helpers, sameAs, minLength } from 'vuelidate/lib/validators';
-import { processInvalidForm } from '@/functions';
 
 const usernameRegex = helpers.regex('alpha', /^[a-zA-Z0-9._-]{0,30}$/);
 
@@ -278,7 +277,7 @@ export default {
       for (let roleName in this.userRoles) {
         if (this.userRoles[roleName]) setRoles.push(roleName);
       }
-      return this.createUser({
+      this.createUser({
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
@@ -288,23 +287,7 @@ export default {
         verified: this.verified,
         allocatedDriveBytes: this.allocatedDriveBytes,
         roles: setRoles
-      })
-        .then((user) => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: 'User has been created.',
-            class: 'success--text'
-          });
-        })
-        .catch(error => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: processInvalidForm(error, 'Failed to create new user.'),
-            class: 'error--text'
-          });
-        });
+      });
     },
 
     clearForm () {

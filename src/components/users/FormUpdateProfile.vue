@@ -91,7 +91,6 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { validationMixin } from 'vuelidate';
 import { required, helpers } from 'vuelidate/lib/validators';
-import { processInvalidForm } from '@/functions';
 
 const usernameRegex = helpers.regex('alpha', /^[a-zA-Z0-9._-]{0,30}$/);
 
@@ -114,7 +113,6 @@ export default {
       { text: '100 GB', value: 107374182400 },
       { text: '200 GB', value: 214748364800 }
     ],
-    roles: null,
     userRoles: {},
     formIsEmpty: false,
     firstName: null,
@@ -148,7 +146,7 @@ export default {
   },
 
   computed: {
-    ...mapState('users', ['user']),
+    ...mapState('users', ['user', 'roles']),
     ...mapState('app', ['showProgress']),
 
     firstNameErrors () {
@@ -199,7 +197,6 @@ export default {
     },
 
     submit () {
-      this.SET_SHOW_PROGRESS(true);
       let setRoles = [];
       for (let roleName in this.userRoles) {
         if (this.userRoles[roleName]) setRoles.push(roleName);
@@ -212,23 +209,7 @@ export default {
         verified: this.verified,
         allocatedDriveBytes: this.allocatedDriveBytes,
         roles: setRoles
-      })
-        .then((user) => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: 'Profile has been updated.',
-            class: 'success--text'
-          });
-        })
-        .catch(error => {
-          this.SET_SHOW_PROGRESS(false);
-          this.SET_SNACKBAR({
-            show: true,
-            text: processInvalidForm(error, 'Failed to update profile.'),
-            class: 'error--text'
-          });
-        });
+      });
     },
 
     clearForm () {
@@ -276,19 +257,20 @@ export default {
   },
 
   mounted () {
-    this.fetchRoles().then(roles => {
-      this.roles = roles;
-      for (let i = 0; i < roles.length; i++) {
-        this.userRoles[roles[i].name] = false;
-        if (this.user) {
-          for (let j = 0; j < this.user.roles.length; j++) {
-            if (this.user.roles[j].name === roles[i].name) {
-              this.userRoles[roles[i].name] = true;
+    if (!this.roles) {
+      this.fetchRoles().then(roles => {
+        for (let i = 0; i < roles.length; i++) {
+          this.userRoles[roles[i].name] = false;
+          if (this.user) {
+            for (let j = 0; j < this.user.roles.length; j++) {
+              if (this.user.roles[j].name === roles[i].name) {
+                this.userRoles[roles[i].name] = true;
+              }
             }
           }
         }
-      }
-    });
+      });
+    }
   }
 };
 </script>
