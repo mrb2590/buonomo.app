@@ -287,7 +287,8 @@ export default {
         verified: this.verified,
         allocatedDriveBytes: this.allocatedDriveBytes,
         roles: setRoles
-      });
+      })
+        .then(response => this.clearForm());
     },
 
     clearForm () {

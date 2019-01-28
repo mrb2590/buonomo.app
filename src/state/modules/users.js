@@ -367,7 +367,7 @@ export const actions = {
    */
   async createUser ({ commit }, form) {
     this.commit('app/SET_SHOW_PROGRESS', true);
-    return axios.post(`${apiUrl}/v1/udsers`, {
+    return axios.post(`${apiUrl}/v1/users`, {
       first_name: form.firstName,
       last_name: form.lastName,
       email: form.email,
