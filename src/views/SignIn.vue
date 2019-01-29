@@ -41,6 +41,7 @@
                 color="primary"
                 :disabled="showProgress"
               ></v-switch>
+              <router-link to="/password/reset">Forgot password?</router-link>
             </v-card-text>
 
             <v-card-actions>

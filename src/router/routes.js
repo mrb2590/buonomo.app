@@ -157,6 +157,36 @@ export default [
     }
   },
   {
+    path: '/password',
+    name: 'forgot-password',
+    component: () => lazyLoadView(import(/* webpackChunkName: "auth" */ '../views/Password')),
+    meta: {
+      displayName: 'Password'
+    },
+    children: [
+      {
+        path: 'reset',
+        name: 'forgot-password',
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "auth" */ '../views/PasswordForgot')
+        ),
+        meta: {
+          displayName: 'Forgot Password'
+        }
+      },
+      {
+        path: 'reset/:token',
+        name: 'reset-password',
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "auth" */ '../views/PasswordReset')
+        ),
+        meta: {
+          displayName: 'Reset Password'
+        }
+      }
+    ]
+  },
+  {
     path: '/404',
     name: '404',
     component: notFoundView,

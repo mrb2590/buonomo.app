@@ -241,4 +241,12 @@ export default {
 .v-list__group__header__prepend-icon .v-icon {
   font-size: 18px;
 }
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
 </style>
