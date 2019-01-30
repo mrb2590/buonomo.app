@@ -1,73 +1,67 @@
 <template>
-  <v-form novalidate @submit.prevent="validate">
+  <v-form novalidate @submit.prevent="validate" ref="form">
     <v-layout wrap>
       <v-flex xs12>
         <v-text-field
-          v-model="firstName"
+          v-model="form.firstName"
           name="first_name"
           label="First Name"
           required
           :error-messages="firstNameErrors"
-          @input="$v.firstName.$touch()"
-          @blur="$v.firstName.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.firstName.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
         <v-text-field
-          v-model="lastName"
+          v-model="form.lastName"
           name="last_name"
           label="Last Name"
           required
           :error-messages="lastNameErrors"
-          @input="$v.lastName.$touch()"
-          @blur="$v.lastName.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.lastName.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
         <v-text-field
-          v-model="username"
+          v-model="form.username"
           name="username"
           label="Userame"
           required
           :error-messages="usernameErrors"
-          @input="$v.username.$touch()"
-          @blur="$v.username.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.username.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
         <v-select
           v-if="admin"
-          v-model="verified"
+          v-model="form.verified"
           name="verified"
           label="Email Address Verified"
           required
           :error-messages="verifiedErrors"
-          @input="$v.verified.$touch()"
-          @blur="$v.verified.$touch()"
+          @input="$v.form.verified.$touch()"
           :disabled="showProgress"
-          :items="verifiedOptions"
+          :items="selectOptions.verified"
         ></v-select>
         <v-select
           v-if="admin"
-          v-model="allocatedDriveBytes"
+          v-model="form.allocatedDriveBytes"
           name="allocatedDriveBytes"
           label="Allocated Drive Storage"
           required
           :error-messages="allocatedDriveBytesErrors"
-          @input="$v.allocatedDriveBytes.$touch()"
-          @blur="$v.allocatedDriveBytes.$touch()"
+          @input="$v.form.allocatedDriveBytes.$touch()"
           :disabled="showProgress"
-          :items="allocatedDriveBytesOptions"
+          :items="selectOptions.allocatedDriveBytes"
         ></v-select>
         <div v-if="admin">
           <v-checkbox
-          v-for="(role, index) in roles"
-          :key="index"
+            v-for="(role, index) in roles"
+            :key="index"
             :label="role.display_name"
-            v-model="userRoles[role.name]"
+            v-model="form.roles[role.name]"
+            :disabled="showProgress"
+            @change="setFormIsEmpty"
           ></v-checkbox>
         </div>
       </v-flex>
@@ -98,28 +92,32 @@ export default {
   name: 'FormUpdateProfile',
 
   data: () => ({
-    verifiedOptions: [
-      { text: 'Yes', value: true },
-      { text: 'No', value: false }
-    ],
-    allocatedDriveBytesOptions: [
-      { text: 'None', value: 0 },
-      { text: '1 GB', value: 1073741824 },
-      { text: '2 GB', value: 2147483648 },
-      { text: '5 GB', value: 5368709120 },
-      { text: '10 GB', value: 10737418240 },
-      { text: '25 GB', value: 26843545600 },
-      { text: '50 GB', value: 53687091200 },
-      { text: '100 GB', value: 107374182400 },
-      { text: '200 GB', value: 214748364800 }
-    ],
-    userRoles: {},
     formIsEmpty: false,
-    firstName: null,
-    lastName: null,
-    username: null,
-    verified: null,
-    allocatedDriveBytes: null
+    form: {
+      firstName: null,
+      lastName: null,
+      username: null,
+      verified: null,
+      allocatedDriveBytes: null,
+      roles: {}
+    },
+    selectOptions: {
+      verified: [
+        { text: 'Yes', value: true },
+        { text: 'No', value: false }
+      ],
+      allocatedDriveBytes: [
+        { text: 'None', value: 0 },
+        { text: '1 GB', value: 1073741824 },
+        { text: '2 GB', value: 2147483648 },
+        { text: '5 GB', value: 5368709120 },
+        { text: '10 GB', value: 10737418240 },
+        { text: '25 GB', value: 26843545600 },
+        { text: '50 GB', value: 53687091200 },
+        { text: '100 GB', value: 107374182400 },
+        { text: '200 GB', value: 214748364800 }
+      ]
+    }
   }),
 
   props: {
@@ -134,13 +132,15 @@ export default {
 
   validations () {
     let validations = {
-      firstName: { required },
-      lastName: { required },
-      username: { required, usernameRegex }
+      form: {
+        firstName: { required },
+        lastName: { required },
+        username: { required, usernameRegex }
+      }
     };
     if (this.admin) {
-      validations.verified = { required };
-      validations.allocatedDriveBytes = { required };
+      validations.form.verified = { required };
+      validations.form.allocatedDriveBytes = { required };
     }
     return validations;
   },
@@ -151,45 +151,50 @@ export default {
 
     firstNameErrors () {
       const errors = [];
-      if (!this.$v.firstName.$dirty) return errors;
-      !this.$v.firstName.required && errors.push('First name is required');
+      if (!this.$v.form.firstName.$dirty) return errors;
+      !this.$v.form.firstName.required && errors.push('First name is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     lastNameErrors () {
       const errors = [];
-      if (!this.$v.lastName.$dirty) return errors;
-      !this.$v.lastName.required && errors.push('Last name is required');
+      if (!this.$v.form.lastName.$dirty) return errors;
+      !this.$v.form.lastName.required && errors.push('Last name is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     usernameErrors () {
       const errors = [];
-      if (!this.$v.username.$dirty) return errors;
-      !this.$v.username.required && errors.push('Last name is required');
-      !this.$v.username.usernameRegex &&
+      if (!this.$v.form.username.$dirty) return errors;
+      !this.$v.form.username.required && errors.push('Last name is required');
+      !this.$v.form.username.usernameRegex &&
         errors.push('Username can only contain letters, numbers, underscores, periods, and dashes');
+      this.setFormIsEmpty();
       return errors;
     },
 
     verifiedErrors () {
       const errors = [];
-      if (!this.$v.verified.$dirty) return errors;
-      !this.$v.verified.required && errors.push('Email Address Verified is required');
+      if (!this.$v.form.verified.$dirty) return errors;
+      !this.$v.form.verified.required && errors.push('Email Address Verified is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     allocatedDriveBytesErrors () {
       const errors = [];
-      if (!this.$v.allocatedDriveBytes.$dirty) return errors;
-      !this.$v.allocatedDriveBytes.required && errors.push('Allocated Drive Storage is required');
+      if (!this.$v.form.allocatedDriveBytes.$dirty) return errors;
+      !this.$v.form.allocatedDriveBytes.required && errors.push('Allocated Drive Storage is required');
+      this.setFormIsEmpty();
       return errors;
     }
   },
 
   methods: {
     ...mapActions('users', ['updateProfile', 'fetchRoles']),
-    ...mapMutations('app', ['SET_SNACKBAR', 'SET_SHOW_PROGRESS']),
+    ...mapMutations('app', ['SET_SHOW_PROGRESS']),
 
     validate () {
       this.$v.$touch();
@@ -198,57 +203,53 @@ export default {
 
     submit () {
       let setRoles = [];
-      for (let roleName in this.userRoles) {
-        if (this.userRoles[roleName]) setRoles.push(roleName);
+      for (let roleName in this.form.roles) {
+        if (this.form.roles[roleName]) setRoles.push(roleName);
       }
       this.updateProfile({
         id: this.user.id,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        username: this.username,
-        verified: this.verified,
-        allocatedDriveBytes: this.allocatedDriveBytes,
+        ...this.form,
         roles: setRoles
       });
     },
 
     clearForm () {
+      this.$refs.form.reset();
       this.$v.$reset();
-      this.firstName = null;
-      this.lastName = null;
-      this.username = null;
-      this.verified = null;
-      this.allocatedDriveBytes = null;
       this.formIsEmpty = true;
     },
 
-    checkFormIsEmpty () {
-      if (this.firstName === null &&
-        this.lastName === null &&
-        this.username === null &&
-        this.verified === null &&
-        this.allocatedDriveBytes === null
-      ) {
-        this.formIsEmpty = true;
-      } else {
-        this.formIsEmpty = false;
+    setFormIsEmpty () {
+      for (let field in this.form) {
+        if (field === 'roles') continue;
+        if (this.form[field]) {
+          this.formIsEmpty = false;
+          return;
+        }
       }
+      for (let role in this.form.roles) {
+        if (this.form.roles[role]) {
+          this.formIsEmpty = false;
+          return;
+        }
+      }
+      this.formIsEmpty = true;
     }
   },
 
   watch: {
     user () {
-      this.firstName = this.user.first_name;
-      this.lastName = this.user.last_name;
-      this.username = this.user.username;
-      this.verified = !!this.user.email_verified_at;
-      this.allocatedDriveBytes = this.user.allocated_drive_bytes;
+      this.form.firstName = this.user.first_name;
+      this.form.lastName = this.user.last_name;
+      this.form.username = this.user.username;
+      this.form.verified = !!this.user.email_verified_at;
+      this.form.allocatedDriveBytes = this.user.allocated_drive_bytes;
       if (this.roles) {
         for (let i = 0; i < this.roles.length; i++) {
-          this.userRoles[this.roles[i].name] = false;
+          this.form.roles[this.roles[i].name] = false;
           for (let j = 0; j < this.user.roles.length; j++) {
             if (this.user.roles[j].name === this.roles[i].name) {
-              this.userRoles[this.roles[i].name] = true;
+              this.form.roles[this.roles[i].name] = true;
             }
           }
         }
@@ -259,18 +260,33 @@ export default {
   mounted () {
     if (!this.roles) {
       this.fetchRoles().then(roles => {
-        for (let i = 0; i < roles.length; i++) {
-          this.userRoles[roles[i].name] = false;
-          if (this.user) {
-            for (let j = 0; j < this.user.roles.length; j++) {
-              if (this.user.roles[j].name === roles[i].name) {
-                this.userRoles[roles[i].name] = true;
-              }
+        for (let roleName in this.form.roles) {
+          for (let i = 0; i < this.user.roles.length; i++) {
+            if (this.user.roles[i].name === roleName) {
+              this.form.roles[roleName] = true;
             }
           }
+          this.form.roles[roleName] = false;
         }
       });
     }
   }
+
+  // mounted () {
+  //   if (!this.roles) {
+  //     this.fetchRoles().then(roles => {
+  //       for (let i = 0; i < roles.length; i++) {
+  //         this.form.roles[roles[i].name] = false;
+  //         if (this.user) {
+  //           for (let j = 0; j < this.user.roles.length; j++) {
+  //             if (this.user.roles[j].name === roles[i].name) {
+  //               this.form.roles[roles[i].name] = true;
+  //             }
+  //           }
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
 };
 </script>

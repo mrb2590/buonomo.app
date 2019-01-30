@@ -1,119 +1,105 @@
 <template>
-  <v-form novalidate @submit.prevent="validate">
+  <v-form novalidate @submit.prevent="validate" ref="form">
     <v-layout wrap>
       <v-flex xs12 sm6>
         <v-text-field
-          v-model="firstName"
+          v-model="form.firstName"
           type="text"
           name="firstName"
           label="First Name"
           required
           :error-messages="firstNameErrors"
-          @input="$v.firstName.$touch()"
-          @blur="$v.firstName.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.firstName.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
       </v-flex>
       <v-flex xs12 sm6>
         <v-text-field
-          v-model="lastName"
+          v-model="form.lastName"
           type="text"
           name="lastName"
           label="Last Name"
           required
           :error-messages="lastNameErrors"
-          @input="$v.lastName.$touch()"
-          @blur="$v.lastName.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.lastName.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
       </v-flex>
       <v-flex xs12>
         <v-text-field
-          v-model="email"
+          v-model="form.email"
           type="email"
           name="email"
           label="Email Address"
           required
           :error-messages="emailErrors"
-          @input="$v.email.$touch()"
-          @blur="$v.email.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.email.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
       </v-flex>
       <v-flex xs12>
         <v-text-field
-          v-model="username"
+          v-model="form.username"
           name="username"
           label="Userame"
           required
           :error-messages="usernameErrors"
-          @input="$v.username.$touch()"
-          @blur="$v.username.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.username.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
       </v-flex>
       <v-flex xs12>
         <v-text-field
+          v-model="form.password"
           type="password"
-          v-model="password"
           name="password"
           label="New Password"
           required
           :error-messages="passwordErrors"
-          @input="$v.password.$touch()"
-          @blur="$v.password.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.password.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
       </v-flex>
       <v-flex xs12>
         <v-text-field
+          v-model="form.passwordConfirmation"
           type="password"
-          v-model="passwordConfirmation"
           name="password_confirmation"
           label="New Password Confirmation"
           required
           :error-messages="passwordConfirmationErrors"
-          @input="$v.passwordConfirmation.$touch()"
-          @blur="$v.passwordConfirmation.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.passwordConfirmation.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
       </v-flex>
       <v-flex xs12 sm6>
         <v-select
-          v-model="verified"
+          v-model="form.verified"
           name="verified"
           label="Email Address Verified"
           required
           :error-messages="verifiedErrors"
-          @input="$v.verified.$touch()"
-          @blur="$v.verified.$touch()"
+          @input="$v.form.verified.$touch()"
           :disabled="showProgress"
-          :items="verifiedOptions"
+          :items="selectOptions.verified"
         ></v-select>
       </v-flex>
       <v-flex xs12 sm6>
         <v-select
-          v-model="allocatedDriveBytes"
+          v-model="form.allocatedDriveBytes"
           name="allocatedDriveBytes"
           label="Allocated Drive Storage"
           required
           :error-messages="allocatedDriveBytesErrors"
-          @input="$v.allocatedDriveBytes.$touch()"
-          @blur="$v.allocatedDriveBytes.$touch()"
+          @input="$v.form.allocatedDriveBytes.$touch()"
           :disabled="showProgress"
-          :items="allocatedDriveBytesOptions"
+          :items="selectOptions.allocatedDriveBytes"
         ></v-select>
       </v-flex>
       <v-flex
@@ -123,7 +109,9 @@
       >
         <v-checkbox
           :label="role.display_name"
-          v-model="userRoles[role.name]"
+          v-model="form.roles[role.name]"
+          :disabled="showProgress"
+          @change="setFormIsEmpty"
         ></v-checkbox>
       </v-flex>
       <v-flex xs12 text-xs-right>
@@ -153,111 +141,126 @@ export default {
   name: 'FormCreateUser',
 
   data: () => ({
-    verifiedOptions: [
-      { text: 'Yes', value: true },
-      { text: 'No', value: false }
-    ],
-    allocatedDriveBytesOptions: [
-      { text: 'None', value: 0 },
-      { text: '1 GB', value: 1073741824 },
-      { text: '2 GB', value: 2147483648 },
-      { text: '5 GB', value: 5368709120 },
-      { text: '10 GB', value: 10737418240 },
-      { text: '25 GB', value: 26843545600 },
-      { text: '50 GB', value: 53687091200 },
-      { text: '100 GB', value: 107374182400 },
-      { text: '200 GB', value: 214748364800 }
-    ],
-    roles: null,
-    userRoles: {},
     formIsEmpty: true,
-    firstName: '',
-    lastName: '',
-    email: '',
-    username: '',
-    verified: '',
-    allocatedDriveBytes: '',
-    password: '',
-    passwordConfirmation: ''
+    form: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      username: '',
+      verified: '',
+      allocatedDriveBytes: '',
+      password: '',
+      passwordConfirmation: '',
+      roles: {}
+    },
+    selectOptions: {
+      verified: [
+        { text: 'Yes', value: true },
+        { text: 'No', value: false }
+      ],
+      allocatedDriveBytes: [
+        { text: 'None', value: 0 },
+        { text: '1 GB', value: 1073741824 },
+        { text: '2 GB', value: 2147483648 },
+        { text: '5 GB', value: 5368709120 },
+        { text: '10 GB', value: 10737418240 },
+        { text: '25 GB', value: 26843545600 },
+        { text: '50 GB', value: 53687091200 },
+        { text: '100 GB', value: 107374182400 },
+        { text: '200 GB', value: 214748364800 }
+      ]
+    }
   }),
 
   mixins: [validationMixin],
 
   validations: {
-    firstName: { required },
-    lastName: { required },
-    email: { required, email },
-    username: { required, usernameRegex },
-    password: { required, minLength: minLength(6) },
-    passwordConfirmation: { required, minLength: minLength(6), sameAs: sameAs('password') },
-    verified: { required },
-    allocatedDriveBytes: { required }
+    form: {
+      firstName: { required },
+      lastName: { required },
+      email: { required, email },
+      username: { required, usernameRegex },
+      password: { required, minLength: minLength(6) },
+      passwordConfirmation: { required, minLength: minLength(6), sameAs: sameAs('password') },
+      verified: { required },
+      allocatedDriveBytes: { required }
+    }
   },
 
   computed: {
-    ...mapState('users', ['user']),
+    ...mapState('users', ['user', 'roles']),
     ...mapState('app', ['showProgress']),
 
     firstNameErrors () {
       const errors = [];
-      if (!this.$v.firstName.$dirty) return errors;
-      !this.$v.firstName.required && errors.push('First name is required');
+      if (!this.$v.form.firstName.$dirty) return errors;
+      !this.$v.form.firstName.required && errors.push('First name is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     lastNameErrors () {
       const errors = [];
-      if (!this.$v.lastName.$dirty) return errors;
-      !this.$v.lastName.required && errors.push('Last name is required');
+      if (!this.$v.form.lastName.$dirty) return errors;
+      !this.$v.form.lastName.required && errors.push('Last name is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     emailErrors () {
       const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.required && errors.push('First name is required');
-      !this.$v.email.email && errors.push('Email be a valid email address');
+      if (!this.$v.form.email.$dirty) return errors;
+      !this.$v.form.email.required && errors.push('First name is required');
+      !this.$v.form.email.email && errors.push('Email be a valid email address');
+      this.setFormIsEmpty();
       return errors;
     },
 
     usernameErrors () {
       const errors = [];
-      if (!this.$v.username.$dirty) return errors;
-      !this.$v.username.required && errors.push('Last name is required');
-      !this.$v.username.usernameRegex &&
+      if (!this.$v.form.username.$dirty) return errors;
+      !this.$v.form.username.required && errors.push('Last name is required');
+      !this.$v.form.username.usernameRegex &&
         errors.push('Username can only contain letters, numbers, underscores, periods, and dashes');
+      this.setFormIsEmpty();
       return errors;
     },
 
     verifiedErrors () {
       const errors = [];
-      if (!this.$v.verified.$dirty) return errors;
-      !this.$v.verified.required && errors.push('Email Address Verified is required');
+      if (!this.$v.form.verified.$dirty) return errors;
+      !this.$v.form.verified.required && errors.push('Email Address Verified is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     allocatedDriveBytesErrors () {
       const errors = [];
-      if (!this.$v.allocatedDriveBytes.$dirty) return errors;
-      !this.$v.allocatedDriveBytes.required && errors.push('Allocated Drive Storage is required');
+      if (!this.$v.form.allocatedDriveBytes.$dirty) return errors;
+      !this.$v.form.allocatedDriveBytes.required &&
+        errors.push('Allocated Drive Storage is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     passwordErrors () {
       const errors = [];
-      if (!this.$v.password.$dirty) return errors;
-      !this.$v.password.required && errors.push('New password is required');
-      !this.$v.password.minLength && errors.push('New password must be at least six characters');
+      if (!this.$v.form.password.$dirty) return errors;
+      !this.$v.form.password.required && errors.push('New password is required');
+      !this.$v.form.password.minLength &&
+        errors.push('New password must be at least six characters');
+      this.setFormIsEmpty();
       return errors;
     },
 
     passwordConfirmationErrors () {
       const errors = [];
-      if (!this.$v.passwordConfirmation.$dirty) return errors;
-      !this.$v.passwordConfirmation.required && errors.push('New password is required');
-      !this.$v.passwordConfirmation.minLength &&
+      if (!this.$v.form.passwordConfirmation.$dirty) return errors;
+      !this.$v.form.passwordConfirmation.required && errors.push('New password is required');
+      !this.$v.form.passwordConfirmation.minLength &&
         errors.push('New password must be at least six characters');
-      !this.$v.passwordConfirmation.sameAs && errors.push('New passwords do not match');
+      !this.$v.form.passwordConfirmation.sameAs && errors.push('New passwords do not match');
+      this.setFormIsEmpty();
       return errors;
     }
   },
@@ -274,60 +277,55 @@ export default {
     submit () {
       this.SET_SHOW_PROGRESS(true);
       let setRoles = [];
-      for (let roleName in this.userRoles) {
-        if (this.userRoles[roleName]) setRoles.push(roleName);
+      for (let roleName in this.form.roles) {
+        if (this.form.roles[roleName]) setRoles.push(roleName);
       }
       this.createUser({
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        username: this.username,
-        password: this.password,
-        passwordConfirmation: this.passwordConfirmation,
-        verified: this.verified,
-        allocatedDriveBytes: this.allocatedDriveBytes,
+        firstName: this.form.firstName,
+        lastName: this.form.lastName,
+        email: this.form.email,
+        username: this.form.username,
+        password: this.form.password,
+        passwordConfirmation: this.form.passwordConfirmation,
+        verified: this.form.verified,
+        allocatedDriveBytes: this.form.allocatedDriveBytes,
         roles: setRoles
       })
         .then(response => this.clearForm());
     },
 
     clearForm () {
+      this.$refs.form.reset();
       this.$v.$reset();
-      this.firstName = null;
-      this.lastName = null;
-      this.email = null;
-      this.username = null;
-      this.password = null;
-      this.passwordConfirmation = null;
-      this.verified = null;
-      this.allocatedDriveBytes = null;
       this.formIsEmpty = true;
     },
 
-    checkFormIsEmpty () {
-      if (this.firstName === null &&
-        this.lastName === null &&
-        this.email === null &&
-        this.username === null &&
-        this.verified === null &&
-        this.password === null &&
-        this.passwordConfirmation === null &&
-        this.allocatedDriveBytes === null
-      ) {
-        this.formIsEmpty = true;
-      } else {
-        this.formIsEmpty = false;
+    setFormIsEmpty () {
+      for (let field in this.form) {
+        if (field === 'roles') continue;
+        if (this.form[field]) {
+          this.formIsEmpty = false;
+          return;
+        }
       }
+      for (let role in this.form.roles) {
+        if (this.form.roles[role]) {
+          this.formIsEmpty = false;
+          return;
+        }
+      }
+      this.formIsEmpty = true;
     }
   },
 
   mounted () {
-    this.fetchRoles().then(roles => {
-      this.roles = roles;
-      for (let i = 0; i < roles.length; i++) {
-        this.userRoles[roles[i].name] = false;
-      }
-    });
+    if (!this.roles) {
+      this.fetchRoles().then(roles => {
+        for (let i = 0; i < roles.length; i++) {
+          this.form.roles[roles[i].name] = false;
+        }
+      });
+    }
   }
 };
 </script>

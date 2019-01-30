@@ -158,7 +158,7 @@ export default [
   },
   {
     path: '/password',
-    name: 'forgot-password',
+    name: 'password',
     component: () => lazyLoadView(import(/* webpackChunkName: "auth" */ '../views/Password')),
     meta: {
       displayName: 'Password'

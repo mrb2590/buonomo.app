@@ -1,17 +1,15 @@
 <template>
-  <v-form novalidate @submit.prevent="validate">
+  <v-form novalidate @submit.prevent="validate" ref="form">
     <v-layout wrap>
       <v-flex xs12>
         <v-text-field
-          v-model="email"
+          v-model="form.email"
           type="email"
           name="email"
           label="Email Address"
           required
           :error-messages="emailErrors"
-          @input="$v.email.$touch()"
-          @blur="$v.email.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.email.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
@@ -42,13 +40,17 @@ export default {
 
   data: () => ({
     formIsEmpty: false,
-    email: null
+    form: {
+      email: null
+    }
   }),
 
   mixins: [validationMixin],
 
   validations: {
-    email: { required, email }
+    form: {
+      email: { required, email }
+    }
   },
 
   computed: {
@@ -57,9 +59,10 @@ export default {
 
     emailErrors () {
       const errors = [];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.required && errors.push('First name is required');
-      !this.$v.email.email && errors.push('Email be a valid email address');
+      if (!this.$v.form.email.$dirty) return errors;
+      !this.$v.form.email.required && errors.push('Email is required');
+      !this.$v.form.email.email && errors.push('Email be a valid email address');
+      this.setFormIsEmpty();
       return errors;
     }
   },
@@ -76,28 +79,30 @@ export default {
     submit () {
       this.updateEmail({
         id: this.user.id,
-        email: this.email
+        email: this.form.email
       });
     },
 
     clearForm () {
+      this.$refs.form.reset();
       this.$v.$reset();
-      this.email = null;
       this.formIsEmpty = true;
     },
 
-    checkFormIsEmpty () {
-      if (this.email === null) {
-        this.formIsEmpty = true;
-      } else {
-        this.formIsEmpty = false;
+    setFormIsEmpty () {
+      for (let field in this.form) {
+        if (this.form[field]) {
+          this.formIsEmpty = false;
+          return;
+        }
       }
+      this.formIsEmpty = true;
     }
   },
 
   watch: {
     user () {
-      this.email = this.user.email;
+      this.form.email = this.user.email;
     }
   }
 };

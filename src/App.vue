@@ -246,7 +246,7 @@ a {
   text-decoration: none;
 }
 
-a:hover {
+a:hover:not(.v-list__tile) {
   text-decoration: underline;
 }
 </style>

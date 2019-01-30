@@ -1,44 +1,38 @@
 <template>
-  <v-form novalidate @submit.prevent="validate">
+  <v-form novalidate @submit.prevent="validate" ref="form">
     <v-layout wrap>
       <v-flex xs12>
         <v-text-field
           v-if="!admin"
+          v-model="form.currentPassword"
           type="password"
-          v-model="currentPassword"
           name="current_password"
           label="Current Password"
           required
           :error-messages="currentPasswordErrors"
-          @input="$v.currentPassword.$touch()"
-          @blur="$v.currentPassword.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.currentPassword.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
         <v-text-field
+          v-model="form.password"
           type="password"
-          v-model="password"
           name="password"
           label="New Password"
           required
           :error-messages="passwordErrors"
-          @input="$v.password.$touch()"
-          @blur="$v.password.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.password.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
         <v-text-field
+          v-model="form.passwordConfirmation"
           type="password"
-          v-model="passwordConfirmation"
           name="password_confirmation"
           label="New Password Confirmation"
           required
           :error-messages="passwordConfirmationErrors"
-          @input="$v.passwordConfirmation.$touch()"
-          @blur="$v.passwordConfirmation.$touch()"
-          @keyup="checkFormIsEmpty"
+          @input="$v.form.passwordConfirmation.$touch()"
           autocomplete="off"
           :disabled="showProgress"
         ></v-text-field>
@@ -69,9 +63,11 @@ export default {
 
   data: () => ({
     formIsEmpty: true,
-    currentPassword: null,
-    password: null,
-    passwordConfirmation: null
+    form: {
+      currentPassword: null,
+      password: null,
+      passwordConfirmation: null
+    }
   }),
 
   props: {
@@ -86,11 +82,13 @@ export default {
 
   validations () {
     let validations = {
-      password: { required, minLength: minLength(6) },
-      passwordConfirmation: { required, minLength: minLength(6), sameAs: sameAs('password') }
+      form: {
+        password: { required, minLength: minLength(6) },
+        passwordConfirmation: { required, minLength: minLength(6), sameAs: sameAs('password') }
+      }
     };
     if (!this.admin) {
-      validations.currentPassword = { required };
+      validations.form.currentPassword = { required };
     }
     return validations;
   },
@@ -101,26 +99,29 @@ export default {
 
     currentPasswordErrors () {
       const errors = [];
-      if (!this.$v.currentPassword.$dirty) return errors;
-      !this.$v.currentPassword.required && errors.push('Current password is required');
+      if (!this.$v.form.currentPassword.$dirty) return errors;
+      !this.$v.form.currentPassword.required && errors.push('Current password is required');
+      this.setFormIsEmpty();
       return errors;
     },
 
     passwordErrors () {
       const errors = [];
-      if (!this.$v.password.$dirty) return errors;
-      !this.$v.password.required && errors.push('New password is required');
-      !this.$v.password.minLength && errors.push('New password must be at least six characters');
+      if (!this.$v.form.password.$dirty) return errors;
+      !this.$v.form.password.required && errors.push('New password is required');
+      !this.$v.form.password.minLength && errors.push('New password must be at least six characters');
+      this.setFormIsEmpty();
       return errors;
     },
 
     passwordConfirmationErrors () {
       const errors = [];
-      if (!this.$v.passwordConfirmation.$dirty) return errors;
-      !this.$v.passwordConfirmation.required && errors.push('New password is required');
-      !this.$v.passwordConfirmation.minLength &&
+      if (!this.$v.form.passwordConfirmation.$dirty) return errors;
+      !this.$v.form.passwordConfirmation.required && errors.push('New password is required');
+      !this.$v.form.passwordConfirmation.minLength &&
         errors.push('New password must be at least six characters');
-      !this.$v.passwordConfirmation.sameAs && errors.push('New passwords do not match');
+      !this.$v.form.passwordConfirmation.sameAs && errors.push('New passwords do not match');
+      this.setFormIsEmpty();
       return errors;
     }
   },
@@ -137,11 +138,11 @@ export default {
     submit () {
       let data = {
         id: this.user.id,
-        password: this.password,
-        passwordConfirmation: this.passwordConfirmation
+        password: this.form.password,
+        passwordConfirmation: this.form.passwordConfirmation
       };
       if (!this.admin) {
-        data.currentPassword = this.currentPassword;
+        data.currentPassword = this.form.currentPassword;
       }
       this.updatePassword(data).then(() => {
         this.clearForm();
@@ -149,22 +150,19 @@ export default {
     },
 
     clearForm () {
+      this.$refs.form.reset();
       this.$v.$reset();
-      this.currentPassword = null;
-      this.password = null;
-      this.passwordConfirmation = null;
       this.formIsEmpty = true;
     },
 
-    checkFormIsEmpty () {
-      if (this.currentPassword === null &&
-        this.password === null &&
-        this.passwordConfirmation === null
-      ) {
-        this.formIsEmpty = true;
-      } else {
-        this.formIsEmpty = false;
+    setFormIsEmpty () {
+      for (let field in this.form) {
+        if (this.form[field]) {
+          this.formIsEmpty = false;
+          return;
+        }
       }
+      this.formIsEmpty = true;
     }
   }
 };
