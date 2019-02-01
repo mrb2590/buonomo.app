@@ -90,6 +90,10 @@ export default {
     },
 
     setFormIsEmpty () {
+      if (this.$v.form.$dirty) {
+        this.formIsEmpty = false;
+        return;
+      }
       for (let field in this.form) {
         if (this.form[field]) {
           this.formIsEmpty = false;

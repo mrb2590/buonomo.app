@@ -127,13 +127,13 @@ export default {
   watch: {
     pagination: {
       handler () {
-        this.fetchUsers();
+        this.updateTable();
       },
       deep: true
     },
 
     search: debounce(function (e) {
-      this.fetchUsers();
+      this.updateTable();
     }, 500),
 
     userCreatedDatesRange () {
@@ -153,7 +153,7 @@ export default {
     ...mapMutations('users', ['SET_USER_CREATED_DATES_RANGE', 'SET_USERS_LIST_OPTIONS']),
     ...mapActions('users', ['fetchUsersPaginated', 'fetchUsersCreatedDates']),
 
-    fetchUsers () {
+    updateTable () {
       this.loading = true;
       this.SET_USERS_LIST_OPTIONS({
         ...this.pagination,
