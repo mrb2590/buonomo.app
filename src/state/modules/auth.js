@@ -40,7 +40,8 @@ export const mutations = {
   },
 
   SET_USER (state, user) {
-    state.user = user ? { ...user } : null;
+    if (!state.user) state.user = {};
+    state.user = user ? { ...Object.assign(state.user, user) } : null;
   }
 };
 

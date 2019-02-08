@@ -209,7 +209,8 @@ export default {
       this.updateProfile({
         id: this.user.id,
         ...this.form,
-        roles: setRoles
+        roles: setRoles,
+        isUserManager: this.admin
       });
     },
 

@@ -30,42 +30,8 @@ export const getters = {
 
 export const mutations = {
   SET_USER (state, user) {
-    state.user = user ? { ...user } : null;
-  },
-
-  SET_USER_PROFILE (state, data) {
-    state.user.first_name = data.first_name;
-    state.user.last_name = data.last_name;
-    state.user.username = data.username;
-    state.user.email_verified_at = data.email_verified_at;
-    state.user.allocated_drive_bytes = data.allocated_drive_bytes;
-    state.user.formatted_allocated_drive_bytes = data.formatted_allocated_drive_bytes;
-    state.user.updated_at = data.updated_at;
-  },
-
-  SET_USER_EMAIL (state, data) {
-    state.user.email = data.email;
-    state.user.updated_at = data.updated_at;
-  },
-
-  SET_USER_AVATAR (state, avatar) {
-    state.user.avatar.avatar_style = avatar.avatar_style;
-    state.user.avatar.accessories_type = avatar.accessories_type;
-    state.user.avatar.clothe_type = avatar.clothe_type;
-    state.user.avatar.clothe_color = avatar.clothe_color;
-    state.user.avatar.graphic_type = avatar.graphic_type;
-    state.user.avatar.eyebrow_type = avatar.eyebrow_type;
-    state.user.avatar.eye_type = avatar.eye_type;
-    state.user.avatar.facial_hair_type = avatar.facial_hair_type;
-    state.user.avatar.facial_hair_color = avatar.facial_hair_color;
-    state.user.avatar.hair_color = avatar.hair_color;
-    state.user.avatar.mouth_type = avatar.mouth_type;
-    state.user.avatar.skin_color = avatar.skin_color;
-    state.user.avatar.top_type = avatar.top_type;
-    state.user.avatar.created_at = avatar.created_at;
-    state.user.avatar.updated_at = avatar.updated_at;
-    state.user.avatar.url = avatar.url;
-    state.user.avatar.updated_at = avatar.updated_at;
+    if (!state.user) state.user = {};
+    state.user = user ? { ...Object.assign(state.user, user) } : null;
   },
 
   SET_USER_ROLES (state, data) {
@@ -234,17 +200,23 @@ export const actions = {
    */
   async updateProfile ({ commit }, form) {
     this.commit('app/SET_SHOW_PROGRESS', true);
-    return axios.patch(`${apiUrl}/v1/users/${form.id}/profile`, {
+    let data = {
       first_name: form.firstName,
       last_name: form.lastName,
-      username: form.username,
-      verified: form.verified,
-      allocated_drive_bytes: form.allocatedDriveBytes,
-      roles: form.roles
-    })
+      username: form.username
+    };
+    if (form.isUserManager) {
+      data.verified = form.verified;
+      data.allocated_drive_bytes = form.allocatedDriveBytes;
+      data.roles = form.roles;
+    }
+    return axios.patch(`${apiUrl}/v1/users/${form.id}/profile`, data)
       .then(response => {
         this.commit('app/SET_SHOW_PROGRESS', false);
-        commit('SET_USER_PROFILE', response.data.data);
+        commit('SET_USER', response.data.data);
+        if (form.id === this.state.auth.user.id) {
+          this.commit('auth/SET_USER', response.data.data);
+        }
         if (response.data.data.roles) {
           commit('SET_USER_ROLES', response.data.data.roles);
         }
@@ -275,7 +247,10 @@ export const actions = {
     })
       .then(response => {
         this.commit('app/SET_SHOW_PROGRESS', false);
-        commit('SET_USER_EMAIL', response.data.data);
+        commit('SET_USER', response.data.data);
+        if (form.id === this.state.auth.user.id) {
+          this.commit('auth/SET_USER', response.data.data);
+        }
         this.commit('app/SET_SNACKBAR', {
           show: true,
           text: 'Email address has been updated.',
@@ -303,8 +278,12 @@ export const actions = {
       password: form.password,
       password_confirmation: form.passwordConfirmation
     })
-      .then((user) => {
+      .then(response => {
         this.commit('app/SET_SHOW_PROGRESS', false);
+        commit('SET_USER', response.data.data);
+        if (form.id === this.state.auth.user.id) {
+          this.commit('auth/SET_USER', response.data.data);
+        }
         this.commit('app/SET_SNACKBAR', {
           show: true,
           text: 'Password has been updated.',
@@ -344,7 +323,10 @@ export const actions = {
     })
       .then(response => {
         this.commit('app/SET_SHOW_PROGRESS', false);
-        commit('SET_USER_AVATAR', response.data.data);
+        commit('SET_USER', { avatar: response.data.data });
+        if (form.id === this.state.auth.user.id) {
+          this.commit('auth/SET_USER', { avatar: response.data.data });
+        }
         this.commit('app/SET_SNACKBAR', {
           show: true,
           text: 'Avatar has been updated.',
