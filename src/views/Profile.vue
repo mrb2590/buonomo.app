@@ -9,7 +9,7 @@
           <v-flex xs12>
             <v-card>
               <v-card-title primary-title>
-                <h2 class="headline primary--text">Edit Avatar</h2>
+                <h2 class="headline primary--text">Update Avatar</h2>
               </v-card-title>
               <v-card-text>
                 <FormUpdateAvatar/>
@@ -23,7 +23,7 @@
           <v-flex xs12>
             <v-card>
               <v-card-title primary-title>
-                <h2 class="headline primary--text">Edit Profile</h2>
+                <h2 class="headline primary--text">Update Profile</h2>
               </v-card-title>
               <v-card-text>
                 <FormUpdateProfile/>
