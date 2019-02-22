@@ -80,7 +80,7 @@ export const actions = {
   },
 
   /**
-   * Fetch the user object from cache or the API.
+   * Fetch a user.
    */
   async fetchUser ({ commit }, userId) {
     return axios.get(`${apiUrl}/v1/users/${userId}`, {

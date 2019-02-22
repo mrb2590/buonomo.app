@@ -1,8 +1,8 @@
 <template>
-  <v-container class="drive-view" fluid fill-height grid-list-xl>
-    <v-layout justify-center align-center>
-      <v-flex shrink>
-        Drive
+  <v-container class="drive-view" fluid fill-height>
+    <v-layout>
+      <v-flex>
+        <FolderTree/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -10,6 +10,7 @@
 
 <script>
 import appConfig from '../app.config';
+import FolderTree from '@/components/drive/FolderTree';
 
 export default {
   name: 'Drive',
@@ -22,10 +23,18 @@ export default {
         content: 'Access you drive files and folders.'
       }
     ]
+  },
+
+  components: {
+    FolderTree
   }
 };
 </script>
 
 <style lang="scss" scoped>
-
+.folder-tree {
+  height: 100%;
+  width: 100%;
+  max-width: 300px;
+}
 </style>
