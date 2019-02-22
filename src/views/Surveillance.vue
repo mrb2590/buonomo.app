@@ -4,40 +4,20 @@
       <v-flex xs12 sm6>
         <v-card>
           <v-card-title primary-title>
-            <h2 class="headline primary--text">Front Door 01</h2>
+            <h2 class="headline primary--text">MikeRPi01</h2>
           </v-card-title>
           <v-card-text>
-            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
+            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/mikerpi01">
           </v-card-text>
         </v-card>
       </v-flex>
       <v-flex xs12 sm6>
         <v-card>
           <v-card-title primary-title>
-            <h2 class="headline primary--text">Front Door 01</h2>
+            <h2 class="headline primary--text">MikeRPi02</h2>
           </v-card-title>
           <v-card-text>
-            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 sm6>
-        <v-card>
-          <v-card-title primary-title>
-            <h2 class="headline primary--text">Front Door 01</h2>
-          </v-card-title>
-          <v-card-text>
-            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 sm6>
-        <v-card>
-          <v-card-title primary-title>
-            <h2 class="headline primary--text">Front Door 01</h2>
-          </v-card-title>
-          <v-card-text>
-            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/front-door-01">
+            <img src="https://dev.api.buonomo.app/v1/surveillance/cameras/mikerpi02">
           </v-card-text>
         </v-card>
       </v-flex>
@@ -66,7 +46,6 @@ export default {
 <style lang="scss" scoped>
 img {
   width: 100%;
-  max-width: 960px;
   height: auto;
 }
 </style>
