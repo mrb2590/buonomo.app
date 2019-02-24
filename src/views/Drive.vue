@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import appConfig from '../app.config';
+import appConfig from '@/app.config';
 import FolderTree from '@/components/drive/FolderTree';
 
 export default {
@@ -35,6 +35,11 @@ export default {
 .folder-tree {
   height: 100%;
   width: 100%;
-  max-width: 300px;
+}
+
+@media (min-width: 600px) {
+  .folder-tree {
+    max-width: 400px;
+  }
 }
 </style>

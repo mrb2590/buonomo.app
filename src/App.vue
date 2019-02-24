@@ -64,14 +64,56 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile to="/drive">
-          <v-list-tile-action>
-            <v-icon>fas fa-fw fa-hdd</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
+        <v-list-group
+          prepend-icon="fas fa-fw fa-hdd"
+          append-icon="fas fa-fw fa-chevron-down nav-toggle"
+          :value="$route.path.startsWith('/drive')"
+          no-action
+          v-if="signedIn"
+        >
+          <v-list-tile slot="activator">
             <v-list-tile-title>Drive</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+          </v-list-tile>
+
+          <v-list-tile to="/drive">
+            <v-list-tile-content>
+              <v-list-tile-title>My Drive</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-icon
+                :class="{ 'primary--text': $route.name === 'drive'}"
+              >
+                fas fa-fw fa-hdd
+              </v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+
+          <v-list-tile to="/drive/shared">
+            <v-list-tile-content>
+              <v-list-tile-title>Shared Drives</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-icon
+                :class="{ 'primary--text': $route.name === 'drive-shared'}"
+              >
+                fab fa-fw fa-slideshare
+              </v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+
+          <v-list-tile to="/drive/trash">
+            <v-list-tile-content>
+              <v-list-tile-title>Trash</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-icon
+                :class="{ 'primary--text': $route.name === 'drive-trash'}"
+              >
+                fas fa-fw fa-trash
+              </v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list-group>
 
         <v-list-tile to="/chat">
           <v-list-tile-action>
