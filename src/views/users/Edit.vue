@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import appConfig from '../app.config';
+import appConfig from '@/app.config';
 import { mapState, mapActions } from 'vuex';
 import ProfileOverview from '@/components/users/ProfileOverview';
 import FormUpdateAvatar from '@/components/users/FormUpdateAvatar';

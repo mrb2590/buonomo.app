@@ -14,6 +14,7 @@
                 :value="userCreatedDates.values"
                 :line-width="2"
                 stroke-linecap="round"
+                color="#4CAF50"
                 auto-draw
                 smooth
                 :height="50"

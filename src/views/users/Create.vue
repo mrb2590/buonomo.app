@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import appConfig from '../app.config';
+import appConfig from '@/app.config';
 import { mapActions } from 'vuex';
 import FormCreateUser from '@/components/users/FormCreateUser';
 

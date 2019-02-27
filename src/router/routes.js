@@ -31,15 +31,6 @@ export default [
     }
   },
   {
-    path: '/drive',
-    name: 'drive',
-    component: () => lazyLoadView(import(/* webpackChunkName: "drive" */ '../views/Drive')),
-    meta: {
-      displayName: 'Drive',
-      authRequired: true
-    }
-  },
-  {
     path: '/chat',
     name: 'chat',
     component: () => lazyLoadView(import(/* webpackChunkName: "chat" */ '../views/Chat')),
@@ -68,9 +59,54 @@ export default [
     }
   },
   {
+    path: '/drive',
+    name: 'drive-index',
+    component: () => lazyLoadView(
+      import(/* webpackChunkName: "drive" */ '../views/drive/Index')
+    ),
+    meta: {
+      displayName: 'Drive',
+      authRequired: true
+    },
+    children: [
+      {
+        path: ':id',
+        name: 'drive-folder',
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "drive" */ '../views/drive/Drive')
+        ),
+        meta: {
+          displayName: 'My Drive'
+        }
+      },
+      {
+        path: 'shared',
+        name: 'drive-shared',
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "drive" */ '../views/drive/Shared')
+        ),
+        meta: {
+          displayName: 'Shared Drives'
+        }
+      },
+      {
+        path: 'trash',
+        name: 'drive-trash',
+        component: () => lazyLoadView(
+          import(/* webpackChunkName: "drive" */ '../views/drive/Trash')
+        ),
+        meta: {
+          displayName: 'Drive Trash'
+        }
+      }
+    ]
+  },
+  {
     path: '/users',
-    name: 'users',
-    component: () => lazyLoadView(import(/* webpackChunkName: "users" */ '../views/Users')),
+    name: 'users-index',
+    component: () => lazyLoadView(
+      import(/* webpackChunkName: "users" */ '../views/users/Index')
+    ),
     meta: {
       displayName: 'Users',
       authRequired: true
@@ -84,9 +120,9 @@ export default [
     children: [
       {
         path: 'list',
-        name: 'all-users',
+        name: 'users-list',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "users" */ '../views/UsersList')
+          import(/* webpackChunkName: "users" */ '../views/users/List')
         ),
         meta: {
           displayName: 'All Users'
@@ -94,9 +130,9 @@ export default [
       },
       {
         path: 'create',
-        name: 'create-users',
+        name: 'users-create',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "users" */ '../views/UsersCreate')
+          import(/* webpackChunkName: "users" */ '../views/users/Create')
         ),
         meta: {
           displayName: 'Create New User'
@@ -104,9 +140,9 @@ export default [
       },
       {
         path: ':id',
-        name: 'edit-users',
+        name: 'users-edit',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "users" */ '../views/UsersEdit')
+          import(/* webpackChunkName: "users" */ '../views/users/Edit')
         ),
         meta: {
           displayName: 'Edit User'
@@ -158,17 +194,19 @@ export default [
   },
   {
     path: '/password',
-    name: 'password',
-    component: () => lazyLoadView(import(/* webpackChunkName: "auth" */ '../views/Password')),
+    name: 'password-index',
+    component: () => lazyLoadView(
+      import(/* webpackChunkName: "auth" */ '../views/auth/Index')
+    ),
     meta: {
       displayName: 'Password'
     },
     children: [
       {
         path: 'reset',
-        name: 'forgot-password',
+        name: 'password-forgot',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "auth" */ '../views/PasswordForgot')
+          import(/* webpackChunkName: "auth" */ '../views/auth/Forgot')
         ),
         meta: {
           displayName: 'Forgot Password'
@@ -176,9 +214,9 @@ export default [
       },
       {
         path: 'reset/:token',
-        name: 'reset-password',
+        name: 'password-reset',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "auth" */ '../views/PasswordReset')
+          import(/* webpackChunkName: "auth" */ '../views/auth/Reset')
         ),
         meta: {
           displayName: 'Reset Password'

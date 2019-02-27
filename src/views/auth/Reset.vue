@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import appConfig from '../app.config';
+import appConfig from '@/app.config';
 import axios from 'axios';
 import { processInvalidForm } from '@/functions';
 import { validationMixin } from 'vuelidate';

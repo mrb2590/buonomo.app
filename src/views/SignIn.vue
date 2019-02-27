@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import appConfig from '../app.config';
+import appConfig from '@/app.config';
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 import { mapState, mapActions, mapMutations } from 'vuex';

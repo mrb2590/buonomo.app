@@ -69,19 +69,19 @@
           append-icon="fas fa-fw fa-chevron-down nav-toggle"
           :value="$route.path.startsWith('/drive')"
           no-action
-          v-if="signedIn"
+          v-if="signedIn && user"
         >
           <v-list-tile slot="activator">
             <v-list-tile-title>Drive</v-list-tile-title>
           </v-list-tile>
 
-          <v-list-tile to="/drive">
+          <v-list-tile :to="`/drive/${user.folder_id}`">
             <v-list-tile-content>
               <v-list-tile-title>My Drive</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon
-                :class="{ 'primary--text': $route.name === 'drive'}"
+                :class="{ 'primary--text': $route.name === 'drive-folder'}"
               >
                 fas fa-fw fa-hdd
               </v-icon>
@@ -159,7 +159,7 @@
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon
-                :class="{ 'primary--text': $route.name === 'all-users'}"
+                :class="{ 'primary--text': $route.name === 'users-list'}"
               >
                 fas fa-fw fa-users
               </v-icon>
@@ -172,7 +172,7 @@
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon
-                :class="{ 'primary--text': $route.name === 'create-users'}"
+                :class="{ 'primary--text': $route.name === 'users-create'}"
               >
                 fas fa-fw fa-user-plus
               </v-icon>
@@ -290,5 +290,15 @@ a {
 
 a:hover:not(.v-list__tile) {
   text-decoration: underline;
+}
+
+.v-input--selection-controls__input > i {
+  width: 100%;
+  text-align: center;
+  line-height: 24px;
+}
+
+.container.grid-list-xl.fill-height .layout:only-child {
+  height: calc(100% + 24px);
 }
 </style>

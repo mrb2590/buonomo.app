@@ -27,16 +27,28 @@
         :search="search"
         :filter="filter"
         item-key="id"
-        activatable
         active-class="primary--text"
         transition
         :open="[user.folder_id]"
+        to="/hello"
       >
         <template
           slot="prepend"
-          slot-scope="{ item, open }"
+          slot-scope="{ open }"
         >
           <v-icon>{{ open ? 'fas fa-folder-open' : 'fas fa-folder' }}</v-icon>
+        </template>
+        <template
+          slot="label"
+          slot-scope="{ item }"
+        >
+          <span
+            @click.stop="$router.push({ name: 'drive-folder', params: { id: item.id } })"
+            class="folder-link"
+            :class="{ 'primary--text': $route.params.id === item.id }"
+          >
+            {{ item.name }}
+          </span>
         </template>
       </v-treeview>
     </v-card-text>
@@ -70,7 +82,9 @@ export default {
   },
 
   mounted () {
-    this.fetchFolderTree(this.user.folder_id);
+    if (!this.folderTree) {
+      this.fetchFolderTree(this.user.folder_id);
+    }
   }
 };
 </script>
@@ -83,5 +97,9 @@ export default {
 /deep/ .v-icon.v-icon.v-icon--link {
   width: 26px;
   text-align: center;
+}
+
+.folder-link {
+  cursor: pointer;
 }
 </style>
