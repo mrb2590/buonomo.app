@@ -47,7 +47,6 @@ export default {
 .folder-tree {
   min-height: 696px;
   max-height: calc(100vh - 144px);
-  overflow: auto;
 }
 .explorer-row {
   flex-basis: 50%;

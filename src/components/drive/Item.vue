@@ -4,7 +4,10 @@
     :class="{ clickable: itemType === 'folder' }"
     @click="openFolder"
   >
-    <v-sheet class="item-sheet pa-3 grey darken-2">
+    <v-sheet
+      class="item-sheet pa-3 grey"
+      :class="[{ 'lighten-4': !darkMode }, { 'darken-2': darkMode }]"
+    >
       <v-btn icon class="menu-btn">
         <v-icon>fas fa-ellipsis-v</v-icon>
       </v-btn>
@@ -17,6 +20,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'Folder',
 
@@ -34,6 +39,10 @@ export default {
   data: () => ({
     icon: 'fa-file'
   }),
+
+  computed: {
+    ...mapState('preferences', ['darkMode'])
+  },
 
   methods: {
     openFolder () {

@@ -2,20 +2,20 @@
   <v-card
     class="folder-tree"
   >
-    <v-sheet class="pa-3 grey darken-4">
+    <v-sheet
+      class="pa-3 grey"
+      :class="[{ 'lighten-3': !darkMode }, { 'darken-4': darkMode }]"
+    >
       <v-text-field
         v-model="search"
         label="Search folders"
-        dark
         flat
-        solo-inverted
         hide-details
         clearable
         clear-icon="fas fa-times"
       ></v-text-field>
       <v-checkbox
         v-model="caseSensitive"
-        dark
         hide-details
         label="Case sensitive search"
       ></v-checkbox>
@@ -33,9 +33,11 @@
       >
         <template
           slot="prepend"
-          slot-scope="{ open }"
+          slot-scope="{ open, item }"
         >
-          <v-icon>{{ open ? 'fas fa-folder-open' : 'fas fa-folder' }}</v-icon>
+          <v-icon :color="$route.params.id === item.id ? 'primary' : ''">
+            {{ open || $route.params.id === item.id ? 'fas fa-folder-open' : 'fas fa-folder' }}
+          </v-icon>
         </template>
         <template
           slot="label"
@@ -45,6 +47,7 @@
             @click.stop="$router.push({ name: 'drive-folder', params: { id: item.id } })"
             class="folder-link"
             :class="{ 'primary--text': $route.params.id === item.id }"
+            :title="item.name"
           >
             {{ item.name }}
           </span>
@@ -67,6 +70,7 @@ export default {
   }),
 
   computed: {
+    ...mapState('preferences', ['darkMode']),
     ...mapState('auth', ['user']),
     ...mapState('drive', ['folderTree']),
 
@@ -106,6 +110,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.folder-tree {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.folder-link {
+  cursor: pointer;
+}
 /deep/ {
   .v-treeview-node {
     margin-left: 14px;
@@ -117,8 +128,5 @@ export default {
     width: 26px;
     text-align: center;
   }
-}
-.folder-link {
-  cursor: pointer;
 }
 </style>

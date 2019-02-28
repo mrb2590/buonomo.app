@@ -61,12 +61,9 @@ export const actions = {
   /**
    * Fetch a folder's folders.
    */
-  async fetchFolders ({ commit }, folderId) {
+  async fetchFolders ({ commit }, { folderId, page = 1, limit = 25 }) {
     return axios.get(`${apiUrl}/v1/drive/folders/${folderId}/folders`, {
-      params: {
-        page: 1,
-        limit: 25
-      }
+      params: { page, limit }
     })
       .then(response => {
         commit('SET_FOLDERS', response.data);
@@ -86,12 +83,9 @@ export const actions = {
   /**
    * Fetch a folder's files.
    */
-  async fetchFiles ({ commit }, folderId) {
+  async fetchFiles ({ commit }, { folderId, page = 1, limit = 25 }) {
     return axios.get(`${apiUrl}/v1/drive/folders/${folderId}/files`, {
-      params: {
-        page: 1,
-        limit: 25
-      }
+      params: { page, limit }
     })
       .then(response => {
         commit('SET_FILES', response.data);
