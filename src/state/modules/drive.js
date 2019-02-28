@@ -65,7 +65,7 @@ export const actions = {
     return axios.get(`${apiUrl}/v1/drive/folders/${folderId}/folders`, {
       params: {
         page: 1,
-        limit: -1
+        limit: 25
       }
     })
       .then(response => {
@@ -90,7 +90,7 @@ export const actions = {
     return axios.get(`${apiUrl}/v1/drive/folders/${folderId}/files`, {
       params: {
         page: 1,
-        limit: -1
+        limit: 25
       }
     })
       .then(response => {

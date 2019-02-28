@@ -73,7 +73,7 @@ export default [
         path: ':id',
         name: 'drive-folder',
         component: () => lazyLoadView(
-          import(/* webpackChunkName: "drive" */ '../views/drive/Drive')
+          import(/* webpackChunkName: "drive" */ '../views/drive/Explorer')
         ),
         meta: {
           displayName: 'My Drive'

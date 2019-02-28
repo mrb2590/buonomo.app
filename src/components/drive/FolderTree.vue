@@ -20,7 +20,7 @@
         label="Case sensitive search"
       ></v-checkbox>
     </v-sheet>
-    <v-card-text>
+    <v-card-text class="tree-body">
       <v-treeview
         v-if="folderTree"
         :items="[folderTree]"
@@ -29,8 +29,7 @@
         item-key="id"
         active-class="primary--text"
         transition
-        :open="[user.folder_id]"
-        to="/hello"
+        :open="open"
       >
         <template
           slot="prepend"
@@ -62,6 +61,7 @@ export default {
   name: 'FolderTree',
 
   data: () => ({
+    open: [],
     search: null,
     caseSensitive: false
   }),
@@ -78,27 +78,46 @@ export default {
   },
 
   methods: {
-    ...mapActions('drive', ['fetchFolderTree'])
+    ...mapActions('drive', ['fetchFolderTree']),
+
+    setOpenFolders (folder) {
+      this.open.push(folder.id);
+      for (var i = 0; i < folder.children.length; i++) {
+        this.setOpenFolders(folder.children[i]);
+      }
+      if (this.open[this.open.length - 1] !== this.$route.params.id) {
+        this.open.pop();
+      }
+    }
   },
 
-  mounted () {
-    if (!this.folderTree) {
-      this.fetchFolderTree(this.user.folder_id);
+  watch: {
+    $route: {
+      handler ($route) {
+        this.fetchFolderTree(this.user.folder_id)
+          .then(() => {
+            this.setOpenFolders(this.folderTree);
+          });
+      },
+      immediate: true
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-/deep/ .v-treeview-node--leaf {
-  margin-left: 52px;
+/deep/ {
+  .v-treeview-node {
+    margin-left: 14px;
+  }
+  .v-treeview-node--leaf {
+    margin-left: 40px;
+  }
+  .v-icon.v-icon.v-icon--link {
+    width: 26px;
+    text-align: center;
+  }
 }
-
-/deep/ .v-icon.v-icon.v-icon--link {
-  width: 26px;
-  text-align: center;
-}
-
 .folder-link {
   cursor: pointer;
 }

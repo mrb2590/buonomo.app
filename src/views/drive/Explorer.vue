@@ -1,39 +1,30 @@
 <template>
-  <v-layout class="drive-user-explorer-view" wrap fill-height>
-    <v-flex class="item-container" xs12>
-      <v-card class="fill-height">
-        <v-sheet class="pa-3 grey darken-4">
-          Folders
-        </v-sheet>
-        <v-card-text>
-          <div v-if="!loadingFolders">
-            <File v-for="folder in folders.data" :key="folder.id" :file="folder"/>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-flex>
-    <v-flex class="item-container" xs12>
-      <v-card class="fill-height">
-        <v-sheet class="pa-3 grey darken-4">
-          Files
-        </v-sheet>
-        <v-card-text>
-          <div v-if="!loadingFiles">
-            <File v-for="file in files.data" :key="file.id" :file="file"/>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <v-container class="drive-user-view" fluid fill-height grid-list-xl>
+    <v-layout wrap>
+      <v-flex xs12 sm6 md4 lg4 xl3 d-flex grow>
+        <FolderTree/>
+      </v-flex>
+      <v-flex xs12 sm6 md8 lg8 xl9 d-flex grow>
+        <v-layout column wrap>
+          <v-flex d-flex grow class="explorer-row">
+            <Explorer itemType='folder'/>
+          </v-flex>
+          <v-flex d-flex grow class="explorer-row">
+            <Explorer itemType='file'/>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 import appConfig from '@/app.config';
-import { mapState, mapActions } from 'vuex';
-import File from '@/components/drive/File';
+import FolderTree from '@/components/drive/FolderTree';
+import Explorer from '@/components/drive/Explorer';
 
 export default {
-  name: 'Explorer',
+  name: 'DriveExplorer',
 
   metaInfo: {
     title: `My Drive | ${appConfig.title}`,
@@ -46,52 +37,21 @@ export default {
   },
 
   components: {
-    File
-  },
-
-  data: () => ({
-    loadingFiles: true,
-    loadingFolders: true
-  }),
-
-  computed: {
-    ...mapState('drive', ['files', 'folders'])
-  },
-
-  methods: {
-    ...mapActions('drive', ['fetchFiles', 'fetchFolders']),
-
-    fetchFilesFolders () {
-      this.loadingFiles = true;
-      this.loadingFolders = true;
-      this.fetchFiles(this.$route.params.id)
-        .then(() => {
-          this.loadingFiles = false;
-        });
-      this.fetchFolders(this.$route.params.id)
-        .then(() => {
-          this.loadingFolders = false;
-        });
-    }
-  },
-
-  watch: {
-    $route: {
-      handler ($route) {
-        this.fetchFilesFolders();
-      },
-      immediate: true
-    }
+    FolderTree,
+    Explorer
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.drive-user-explorer-view {
-  height: calc(100% + 24px);
-  min-height: 500px;
+.folder-tree {
+  min-height: 696px;
+  max-height: calc(100vh - 144px);
+  overflow: auto;
 }
-.item-container {
-  height: 50%;
+.explorer-row {
+  flex-basis: 50%;
+  min-height: 270px;
+  max-height: 50vh;
 }
 </style>
