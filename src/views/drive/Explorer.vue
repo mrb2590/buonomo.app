@@ -1,21 +1,57 @@
 <template>
-  <v-container class="drive-user-view" fluid fill-height grid-list-xl>
-    <v-layout wrap>
-      <v-flex xs12 sm6 md4 lg4 xl3 d-flex grow>
-        <FolderTree/>
-      </v-flex>
-      <v-flex xs12 sm6 md8 lg8 xl9 d-flex grow>
-        <v-layout column wrap>
-          <v-flex d-flex grow class="explorer-row">
-            <Explorer itemType='folder'/>
-          </v-flex>
-          <v-flex d-flex grow class="explorer-row">
-            <Explorer itemType='file'/>
-          </v-flex>
-        </v-layout>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div class="drive-user-view fill-height">
+    <v-container fluid fill-height grid-list-xl>
+      <v-layout wrap>
+        <v-flex
+          xs12 sm6 md4 lg4 xl3 d-flex grow
+          :class="{ hide: activeBottomNav !== 'tree' }"
+        >
+          <FolderTree/>
+        </v-flex>
+        <v-flex
+          xs12 sm6 md8 lg8 xl9 d-flex grow
+          :class="{ hide: activeBottomNav !== 'folders' && activeBottomNav !== 'files' }"
+        >
+          <v-layout column wrap>
+            <v-flex
+              d-flex grow
+              class="explorer-row"
+              :class="{ hide: activeBottomNav !== 'folders' }"
+            >
+              <Explorer itemType='folder'/>
+            </v-flex>
+            <v-flex
+              d-flex grow
+              class="explorer-row"
+              :class="{ hide: activeBottomNav !== 'files' }"
+            >
+              <Explorer itemType='file'/>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-bottom-nav
+      :active.sync="activeBottomNav"
+      mandatory
+      fixed
+    >
+      <v-btn flat color="primary" value="tree">
+        <span>Folder List</span>
+        <v-icon>fas fa-list</v-icon>
+      </v-btn>
+
+      <v-btn flat color="primary" value="folders">
+        <span>Folders</span>
+        <v-icon>fas fa-folder</v-icon>
+      </v-btn>
+
+      <v-btn flat color="primary" value="files">
+        <span>Files</span>
+        <v-icon>fas fa-file</v-icon>
+      </v-btn>
+    </v-bottom-nav>
+  </div>
 </template>
 
 <script>
@@ -39,18 +75,49 @@ export default {
   components: {
     FolderTree,
     Explorer
-  }
+  },
+
+  data: () => ({
+    activeBottomNav: 'tree'
+  })
 };
 </script>
 
 <style lang="scss" scoped>
-.folder-tree {
-  min-height: 696px;
-  max-height: calc(100vh - 144px);
+.drive-user-view {
+  position: relative;
+  .folder-tree {
+    max-height: stretch;
+  }
+  .explorer-row {
+    flex-basis: 50%;
+    min-height: 270px;
+    max-height: 50vh;
+  }
+  .v-bottom-nav {
+    bottom: 56px;
+    display: none;
+  }
 }
-.explorer-row {
-  flex-basis: 50%;
-  min-height: 270px;
-  max-height: 50vh;
+@media (max-width: 599px) {
+  .drive-user-view {
+    > .container {
+      height: calc(100% - 52px);
+      padding: 0;
+    }
+    .folder-tree,
+    .explorer-row {
+      min-height: initial;
+      max-height: 100%;
+      height: 100%;
+      height: stretch;
+    }
+    .v-bottom-nav {
+      display: flex;
+    }
+    .hide {
+      display: none !important;
+    }
+  }
 }
 </style>

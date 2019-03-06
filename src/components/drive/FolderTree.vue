@@ -14,11 +14,6 @@
         clearable
         clear-icon="fas fa-times"
       ></v-text-field>
-      <v-checkbox
-        v-model="caseSensitive"
-        hide-details
-        label="Case sensitive search"
-      ></v-checkbox>
     </v-sheet>
     <v-card-text class="tree-body">
       <v-treeview
@@ -65,8 +60,7 @@ export default {
 
   data: () => ({
     open: [],
-    search: null,
-    caseSensitive: false
+    search: null
   }),
 
   computed: {
@@ -75,9 +69,7 @@ export default {
     ...mapState('drive', ['folderTree']),
 
     filter () {
-      return this.caseSensitive
-        ? (item, search, textKey) => item.name.indexOf(search) > -1
-        : undefined;
+      return (item, search, textKey) => item.name.indexOf(search) > -1;
     }
   },
 
@@ -98,10 +90,14 @@ export default {
   watch: {
     $route: {
       handler ($route) {
-        this.fetchFolderTree(this.user.folder_id)
-          .then(() => {
-            this.setOpenFolders(this.folderTree);
-          });
+        if (!this.folderTree) {
+          this.fetchFolderTree(this.user.folder_id)
+            .then(() => {
+              this.setOpenFolders(this.folderTree);
+            });
+        } else {
+          this.setOpenFolders(this.folderTree);
+        }
       },
       immediate: true
     }
@@ -127,6 +123,12 @@ export default {
   .v-icon.v-icon.v-icon--link {
     width: 26px;
     text-align: center;
+  }
+}
+@media (max-width: 599px) {
+  .folder-tree,
+  .v-sheet {
+    background-color: transparent !important;
   }
 }
 </style>

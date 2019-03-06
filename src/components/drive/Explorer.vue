@@ -6,9 +6,11 @@
     >
       {{ `${itemType.charAt(0).toUpperCase()}${itemType.slice(1)}s` }}
       <v-spacer></v-spacer>
-      <v-chip small v-if="!fetchingItems" >
-        {{ itemType === 'folder' ? folders.meta.total : files.meta.total }}
-      </v-chip>
+      <v-btn
+        flat icon small
+      >
+        <v-icon>fas fa-plus</v-icon>
+      </v-btn>
     </v-card-actions>
     <v-card-text>
       <v-layout
@@ -26,7 +28,7 @@
       <v-layout
         wrap
         align-content-center
-        v-if="!fetchingItems && isEmptyItemSet"
+        v-if="!fetchingItems && total === 0"
       >
         <v-flex text-xs-center>
           No {{ itemType }}s
@@ -36,11 +38,11 @@
         wrap
         justify-start
         align-content-start
-        v-if="!fetchingItems && !isEmptyItemSet"
+        v-if="!fetchingItems && total > 0"
       >
         <v-flex
           xs6 sm6 md4 lg3 xl2
-          v-for="item in (itemType === 'folder' ? folders.data : files.data)" :key="item.id" class="item-container"
+          v-for="item in items" :key="item.id" class="item-container"
         >
           <Item :itemType="itemType" :item="item"/>
         </v-flex>
@@ -50,16 +52,27 @@
       class="pa-2 grey"
       :class="[{ 'lighten-3': !darkMode }, { 'darken-4': darkMode }]"
     >
+      <span>{{ pagingInfo }}</span>
       <v-spacer></v-spacer>
+      <v-select
+        class="limit-select"
+        :items="limits"
+        label="Limit"
+        v-model="limit"
+        dense
+        height="12"
+      ></v-select>
       <v-btn
         flat icon small
-        @click="previousPage"
+        @click="fetchItems(--page, limit)"
+        :disabled="page === 1"
       >
         <v-icon>fas fa-chevron-left</v-icon>
       </v-btn>
       <v-btn
         flat icon small
-        @click="nextPage"
+        @click="fetchItems(++page, limit)"
+        :disabled="page === lastPage"
       >
         <v-icon>fas fa-chevron-right</v-icon>
       </v-btn>
@@ -86,24 +99,32 @@ export default {
   },
 
   data: () => ({
-    fetchingItems: true
+    fetchingItems: true,
+    items: null,
+    limit: 25,
+    page: 1,
+    lastPage: 1,
+    total: 0,
+    limits: [
+      { text: '5', value: 5 },
+      { text: '10', value: 10 },
+      { text: '25', value: 25 },
+      { text: '50', value: 50 },
+      { text: '100', value: 100 },
+      { text: 'All', value: -1 }
+    ]
   }),
 
   computed: {
     ...mapState('preferences', ['darkMode']),
     ...mapState('drive', ['files', 'folders']),
 
-    isEmptyItemSet () {
-      if (this.itemType === 'folder') {
-        if (this.folders.meta.total === 0) {
-          return true;
-        }
-      } else {
-        if (this.files.meta.total === 0) {
-          return true;
-        }
-      }
-      return false;
+    pagingInfo () {
+      let page = this.page === '-1' ? 1 : this.page;
+      let start = (page - 1) * this.limit;
+      let end = this.lastPage === page ? this.total : page * this.limit;
+      let type = `${this.itemType.charAt(0).toUpperCase()}${this.itemType.slice(1)}s`;
+      return `${start} - ${end} of ${this.total} ${type}`;
     }
   },
 
@@ -111,45 +132,31 @@ export default {
     ...mapActions('drive', ['fetchFiles', 'fetchFolders']),
 
     fetchItems (page = 1, limit = 25) {
+      if (page < 1) {
+        this.page = 1;
+        return;
+      } else if (page > this.lastPage) {
+        this.page = this.lastPage;
+        return;
+      }
       this.fetchingItems = true;
       if (this.itemType === 'folder') {
         this.fetchFolders({ folderId: this.$route.params.id, page, limit })
-          .then(() => {
+          .then(response => {
+            this.items = response.data;
+            this.lastPage = response.meta.last_page;
+            this.total = response.meta.total;
             this.fetchingItems = false;
+            this.page = page;
           });
       } else {
         this.fetchFiles({ folderId: this.$route.params.id, page, limit })
-          .then(() => {
+          .then(response => {
+            this.items = response.data;
+            this.lastPage = response.meta.last_page;
+            this.total = response.meta.total;
             this.fetchingItems = false;
           });
-      }
-    },
-
-    nextPage () {
-      if (this.itemType === 'folder') {
-        if (this.folders.meta.current_page >= this.folders.meta.last_page) {
-          return;
-        }
-        this.fetchItems(this.folders.meta.current_page + 1, 25);
-      } else {
-        if (this.files.meta.current_page >= this.files.meta.last_page) {
-          return;
-        }
-        this.fetchItems(this.files.meta.current_page + 1, 25);
-      }
-    },
-
-    previousPage () {
-      if (this.itemType === 'folder') {
-        if (this.folders.meta.current_page <= 1) {
-          return;
-        }
-        this.fetchItems(this.folders.meta.current_page + 1, 25);
-      } else {
-        if (this.files.meta.current_page <= 1) {
-          return;
-        }
-        this.fetchItems(this.files.meta.current_page - 1, 25);
       }
     }
   },
@@ -157,9 +164,15 @@ export default {
   watch: {
     $route: {
       handler ($route) {
-        this.fetchItems();
+        this.fetchItems(1, this.limit);
       },
       immediate: true
+    },
+    limit: {
+      handler () {
+        this.page = 1;
+        this.fetchItems(this.page, this.limit);
+      }
     }
   }
 };
@@ -173,6 +186,21 @@ export default {
   > .v-card__text {
     height: 100%;
     overflow: auto;
+  }
+  .limit-select {
+    max-width: 60px;
+    margin-right: 20px;
+    padding: 0;
+    height: 16px;
+    /deep/ .v-label {
+      display: none;
+    }
+  }
+}
+@media (max-width: 599px) {
+  .explorer,
+  .v-card__actions {
+    background-color: transparent !important;
   }
 }
 </style>

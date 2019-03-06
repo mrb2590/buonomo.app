@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <div
     class="item"
     :class="{ clickable: itemType === 'folder' }"
     @click="openFolder"
@@ -11,12 +11,12 @@
       <v-btn icon class="menu-btn">
         <v-icon>fas fa-ellipsis-v</v-icon>
       </v-btn>
-      <v-icon size="42">{{ determineIcon() }}</v-icon>
+      <v-icon size="42">{{ getIcon() }}</v-icon>
       <div class="name pt-3" :title="item.name">
         {{ item.name }}
       </div>
     </v-sheet>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -51,7 +51,7 @@ export default {
       }
     },
 
-    determineIcon () {
+    getIcon () {
       if (this.itemType === 'folder') {
         return 'fas fa-folder';
       }

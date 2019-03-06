@@ -211,9 +211,9 @@
     >
     </v-progress-linear>
 
-    <v-footer app fixed class="footer-text">
+    <!-- <v-footer app fixed class="footer-text">
       <span>&copy; {{ (new Date).getFullYear() }}</span>
-    </v-footer>
+    </v-footer> -->
 
     <v-snackbar
       v-model="snackbar.show"
@@ -267,38 +267,34 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
 #progress {
   z-index: 5;
   position: fixed;
   bottom: 15px;
 }
-
 .v-icon {
   font-size: 16px;
 }
-
 .v-list--dense .v-list__tile .v-icon,
 .v-list__tile__action .v-icon,
 .v-list__group__header__prepend-icon .v-icon {
   font-size: 18px;
 }
-
 a {
   text-decoration: none;
 }
-
 a:hover:not(.v-list__tile) {
   text-decoration: underline;
 }
-
 .v-input--selection-controls__input > i {
   width: 100%;
   text-align: center;
   line-height: 24px;
 }
-
 .container.grid-list-xl.fill-height .layout:only-child {
   height: calc(100% + 24px);
+}
+.v-btn__content {
+  user-select: none;
 }
 </style>

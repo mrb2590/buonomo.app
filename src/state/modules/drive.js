@@ -67,7 +67,7 @@ export const actions = {
     })
       .then(response => {
         commit('SET_FOLDERS', response.data);
-        return response.data.data;
+        return response.data;
       })
       .catch(error => {
         console.log(error);
@@ -89,7 +89,7 @@ export const actions = {
     })
       .then(response => {
         commit('SET_FILES', response.data);
-        return response.data.data;
+        return response.data;
       })
       .catch(error => {
         console.log(error);
